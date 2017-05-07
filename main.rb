@@ -4,10 +4,10 @@ require 'pp'
 
 puts "\nLoading...".light_black
 
+require './abilities.rb'
 require './characters.rb'
 require './items.rb'
 require './methods.rb'
-require './special_abilities.rb'
 
 ###################
 # Challenge Tests #
@@ -65,7 +65,19 @@ while input != 'x'
   # Fight #
   #########
   when 'f'
-    combat(@hero, @serpent)
+    combat(@characters[0], @characters[1])
+  #############
+  # Show Item #
+  #############
+  when 'i'
+    puts 'Which item?'
+    identifier = gets.strip
+
+    if identifier.to_i > 0
+      show_item(identifier.to_i, nil)
+    else
+      show_item(nil, identifier)
+    end
   ##############
   # List Items #
   ##############
