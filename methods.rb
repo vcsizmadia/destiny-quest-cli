@@ -2,7 +2,10 @@ puts '... methods.rb'.light_black
 
 def combat(a, b)
   combat_round = 1
-  history      = [] # Stores the list of abilities used by characters. Example: [1]
+
+  # Stores the list of abilities used by characters. Example: [1 => 2, 1 => 3, 2 => 2]
+  # Each combat should have detailed history, and this is first step in that direction...
+  history = []
 
   # TODO: Break this down into different actions. We cannot just have a simple 'combat' method of course...
   while true
@@ -57,6 +60,50 @@ def combat(a, b)
     # $ 2 - Ability A
     # $ 3 - Ability B
     # $ ...
+    usable_sp_abilities_a = []
+    a['special_abilities'].each do |key, ability|
+      puts "... #{a['name']} ... #{key} => #{ability}".light_black
+      unless ability['is_usable_once_per_combat'] && history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
+        # puts a['id'].inspect.yellow
+        # puts ability['id'].inspect.yellow
+        # puts ability['is_usable_once_per_combat'].inspect.yellow
+        # puts (history.detect {|c_id, ab_id| c_id == a['id'] && ab_id == ability['id']}).inspect.yellow
+        # puts history.inspect.yellow
+        # puts "#{ability['id']}\t#{ability['name']}".light_black
+        usable_sp_abilities_a << ability
+      end
+    end
+
+    if usable_sp_abilities_a.any?
+      puts 'Select a special (sp) ability to use:'
+      usable_sp_abilities_a.each do |ab|
+        puts "#{ab['id']}\t#{ab['name']}"
+      end
+
+      ability_id = gets.strip.to_i
+
+      if ability = a['special_abilities'].detect {|key, ab| ab['id'] == ability_id}
+        # Ability is currently: ["fearless", {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}]
+        # Needs to be: {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}
+        # puts ability.inspect.yellow
+        ability = ability[1] # This is so ugly... we MUST refactor this mess...
+        # puts ability.inspect.green
+        unless ability['is_usable_once_per_combat'] && history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
+          puts "You selected #{ability['name']}.".light_black
+
+          # TODO: Modularize the usage of abilities, otherwise this is going to turn into a mess...
+          if ability['name'] == 'Fearless'
+            a['current']['speed'] += 2
+          end
+
+          history << {a['id'] => ability['id']}
+
+          # puts '..........'
+          # history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
+        end
+      end
+    end
+
     # TODO: These can all be performed on the Character level... or not? Hooks may alter this...
     numbers = [roll, roll, a['current']['speed']]
     attack_speed_a = numbers.sum

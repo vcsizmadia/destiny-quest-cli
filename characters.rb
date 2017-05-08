@@ -194,7 +194,11 @@ end
     # Special abilities (combat, modifier, passive, speed)
     'special_abilities' => {
       # Fearless (sp): Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.
-      'fearless' => {'id' => 3, 'is_usable_once_per_combat' => true}
+      'fearless' => {
+        'id'                        => 3,
+        'is_usable_once_per_combat' => true,
+        'name'                      => 'Fearless'
+      }
     },
 
     # Gold crowns ("money pouch")
@@ -217,7 +221,10 @@ end
     # Special abilities (combat, modifier, passive, speed)
     'special_abilities' => {
       # Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round.
-      'ferocity' => {'id' => 2}
+      'ferocity' => {
+        'id'   => 2,
+        'name' => 'Ferocity'
+      }
     }
   }),
 
@@ -234,7 +241,10 @@ end
     # Special abilities (combat, modifier, passive, speed)
     'special_abilities' => {
       # Venom (pa): If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.
-      'venom' => {'id' => 1}
+      'venom' => {
+        'id'   => 1,
+        'name' => 'Venom'
+      }
     }
   })
 ]
