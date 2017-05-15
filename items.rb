@@ -79,7 +79,6 @@ def remove_item(character, equipment)
 end
 
 @items = [
-
   # The apprentice
   {
     'attributes' => {
@@ -88,6 +87,7 @@ end
     },
     'category'  => 'sword',
     'equipment' => 'main hand',
+    'id'        => 1,
     'name'      => 'The apprentice'
   }
 ]

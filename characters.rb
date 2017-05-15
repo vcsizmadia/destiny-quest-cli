@@ -34,6 +34,7 @@ class Character
     # This is basically the hero sheet.
     @data = {
       'id'   => nil,
+      'roll' => 0, # Can be modified by Abilities (such as 'Dominate').
       'name' => nil,
 
       # 'attributes' = {
@@ -193,12 +194,27 @@ end
 
     # Special abilities (combat, modifier, passive, speed)
     'special_abilities' => {
+      # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
+      'dominate' => {
+        'id'                        => 5,
+        'is_usable_once_per_combat' => true,
+        'name'                      => 'Dominate',
+        'type'                      => 'mo'
+      },
       # Fearless (sp): Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.
       'fearless' => {
         'id'                        => 3,
         'is_usable_once_per_combat' => true,
-        'name'                      => 'Fearless'
-      }
+        'name'                      => 'Fearless',
+        'type'                      => 'sp'
+      },
+      # Savagery (mo): You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.
+      'savagery' => {
+        'id'                        => 4,
+        'is_usable_once_per_combat' => true,
+        'name'                      => 'Savagery',
+        'type'                      => 'mo'
+      },
     },
 
     # Gold crowns ("money pouch")

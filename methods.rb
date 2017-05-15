@@ -1,18 +1,15 @@
 puts '... methods.rb'.light_black
 
 def combat(a, b)
-  combat_round = 1
-
-  # Stores the list of abilities used by characters. Example: [1 => 2, 1 => 3, 2 => 2]
-  # Each combat should have detailed history, and this is first step in that direction...
-  history = []
+  @history = []
+  @round   = 1
 
   # TODO: Break this down into different actions. We cannot just have a simple 'combat' method of course...
   while true
     loser  = nil
     winner = nil
 
-    puts "\nRound #{combat_round}"
+    puts "\nRound #{@round}"
 
     ########
     # Hook #
@@ -54,65 +51,20 @@ def combat(a, b)
     # Character A Speed #
     #####################
     # Speed (sp): These abilities can be used at the start of a combat round (before you roll for attack speed), and will eventually influence how many dice you can roll or reduce the number of dice your opponent can roll for speed. You can only use one speed ability per combat round.
-    # This is how the UI should work right after a round starts:
-    # $ Choose a special ability:
-    # $ 1 - None
-    # $ 2 - Ability A
-    # $ 3 - Ability B
-    # $ ...
-    usable_sp_abilities_a = []
-    a['special_abilities'].each do |key, ability|
-      puts "... #{a['name']} ... #{key} => #{ability}".light_black
-      unless ability['is_usable_once_per_combat'] && history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
-        # puts a['id'].inspect.yellow
-        # puts ability['id'].inspect.yellow
-        # puts ability['is_usable_once_per_combat'].inspect.yellow
-        # puts (history.detect {|c_id, ab_id| c_id == a['id'] && ab_id == ability['id']}).inspect.yellow
-        # puts history.inspect.yellow
-        # puts "#{ability['id']}\t#{ability['name']}".light_black
-        usable_sp_abilities_a << ability
-      end
-    end
 
-    if usable_sp_abilities_a.any?
-      puts 'Select a special (sp) ability to use:'
-      usable_sp_abilities_a.each do |ab|
-        puts "#{ab['id']}\t#{ab['name']}"
-      end
-
-      ability_id = gets.strip.to_i
-
-      if ability = a['special_abilities'].detect {|key, ab| ab['id'] == ability_id}
-        # Ability is currently: ["fearless", {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}]
-        # Needs to be: {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}
-        # puts ability.inspect.yellow
-        ability = ability[1] # This is so ugly... we MUST refactor this mess...
-        # puts ability.inspect.green
-        unless ability['is_usable_once_per_combat'] && history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
-          puts "You selected #{ability['name']}.".light_black
-
-          # TODO: Modularize the usage of abilities, otherwise this is going to turn into a mess...
-          if ability['name'] == 'Fearless'
-            a['current']['speed'] += 2
-          end
-
-          history << {a['id'] => ability['id']}
-
-          # puts '..........'
-          # history.detect {|h| c_id, a_id = h.first; c_id == a['id'] && a_id == ability['id']}
-        end
-      end
-    end
+    skill_selector(a, ['sp']) # ['mo', 'sp']
 
     # TODO: These can all be performed on the Character level... or not? Hooks may alter this...
-    numbers = [roll, roll, a['current']['speed']]
+    numbers = [roll(a, nil), roll(a, nil), a['current']['speed']]
     attack_speed_a = numbers.sum
     puts "... #{a['name']} Attack Speed: #{numbers} => #{attack_speed_a}".light_black
 
     #####################
     # Character B Speed #
     #####################
-    numbers = [roll, roll, b['current']['speed']]
+    skill_selector(b, ['sp'])
+
+    numbers = [roll(b, nil), roll(b, nil), b['current']['speed']]
     attack_speed_b = numbers.sum
     puts "... #{b['name']} Attack Speed: #{numbers} => #{attack_speed_b}".light_black
 
@@ -132,14 +84,20 @@ def combat(a, b)
     # THIS WILL BE A PAIN IN THE ASS!
 
     if winner
+      puts "... #{winner['name']} has a higher attack speed.".light_black
+
+      # For now, only the winner gets to select an Ability.
+      skill_selector(winner, ['mo'])
+
       ########
       # Hook #
       ########
       # Combat (co): These abilities are used either before or after you (or your opponent) roll for damage. Usually these will increase the number of dice you can roll or allow you to block or dodge your opponent's attacks.
       # You can only use one combat ability per combat round.
-      damage_score = winner['brawn'] > winner['magic'] ? roll + winner['brawn'] : roll + winner['magic']
-
-      damage = damage_score - loser['armour']
+      numbers      = [roll(winner, 'damage'), winner['magic'] > winner['brawn'] ? winner['magic'] : winner['brawn']]
+      damage_score = numbers.sum
+      damage       = damage_score - loser['armour'] > 0 ? damage_score - loser['armour'] : 0
+      puts "... #{winner['name']} Damage Score: #{numbers} => #{damage_score} => Damage: #{damage}".light_black
 
       if damage > 0
         # loser['health'] = loser['health'] - damage < 0 ? 0 : loser['health'] - damage
@@ -201,7 +159,7 @@ def combat(a, b)
     #   end
     # end
 
-    combat_round += 1
+    @round += 1
   end
 end
 
@@ -214,6 +172,96 @@ def hp(string)
   puts ('*' * (string.length + 4)).light_black
 end
 
-def roll
-  rand(6) + 1
+# This is a flexible method for rolling a die and potentially influencing it with Abilities.
+# @author Vilmos Csizmadia
+# @version 20170514
+def roll(character, roll_for = nil)
+  character['roll'] = rand(6) + 1
+
+  ########
+  # Hook #
+  ########
+  puts "... #{character['name']} rolled a [#{character['roll']}]#{roll_for ? " for #{roll_for}" : nil}.".light_black
+
+  # A roll for damage may be modified with an available 'mo' Ability:
+  if roll_for == 'damage'
+    skill_selector(character, ['mo'])
+  end
+
+  character['roll']
+end
+
+# This can be called at any time during combat to bring up the ability selector. 
+# @author Vilmos Csizmadia
+# @param character [Character] the Characters for whom the ability selector is invoked
+# @param types [Array] the permitted types of Abilities for the selector
+# @version 20170514
+def skill_selector(character, types = [])
+  abilities = []
+
+  # Determine which Abilities are (still) usable.
+  character['special_abilities'].each do |key, ability|
+    if types.include?(ability['type'])
+      # Unless:
+      # - The Ability can only be used once per combat and it has already been used...
+      # - The Ability can only be used once per combat round and it has already been used this round...
+      unless (
+        ability['is_usable_once_per_combat'] && @history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == ability['id']}
+      ) || (
+        ability['is_usable_once_per_round'] && @history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == ability['id'] && h['round'] == @round}
+      )
+        abilities << ability
+      end
+    end
+  end
+
+  puts @history.inspect.light_black
+  puts abilities.inspect.light_black
+
+  if abilities.any?
+    puts 'Select an ability to use:'
+
+    abilities.each do |a|
+      puts "#{a['id']}\t#{a['name']}"
+    end
+
+    id = gets.strip.to_i
+
+    if ability = character['special_abilities'].detect {|key, a| a['id'] == id}
+      # Ability is currently: ["fearless", {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}]
+      # Needs to be: {"id"=>3, "is_usable_once_per_combat"=>true, "name"=>"Fearless"}
+      puts ability.inspect.yellow
+      ability = ability[1] # This is so ugly... we MUST refactor this mess...
+      puts ability.inspect.green
+      puts "You selected #{ability['name']}.".light_black
+
+      ###################
+      # Begin Abilities #
+      ###################
+      # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
+      if ability['name'] == 'Dominate'
+        character['roll'] = 6
+      # Fearless (sp): Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.
+      elsif ability['name'] == 'Fearless'
+        character['current']['speed'] += 2
+      # Savagery (mo): You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.
+      elsif ability['name'] == 'Savagery'
+        if character['magic'] > character['brawn']
+          character['magic'] += 2
+        else
+          character['brawn'] += 2
+        end
+      end
+      #################
+      # End Abilities #
+      #################
+
+      # Only once an Ability gets used is the (combat) history updated.
+      @history << {
+        'ability_id'   => ability['id'],
+        'character_id' => character['id'],
+        'round'        => @round
+      }
+    end
+  end
 end

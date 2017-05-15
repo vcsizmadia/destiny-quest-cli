@@ -14,8 +14,19 @@ require './methods.rb'
 ###################
 # is_success = roll + roll + character['<name of attribute being tested>'] >= <value of attribute treshold>
 
-@hero    = @characters[0]
-@serpent = @characters[1]
+@hero    = @characters[0] # Temporary...
+# Stores the list of Abilities used by Characters. Each combat should have detailed history, and this is first step in that direction. Example:
+# [
+#   {
+#     ability_id: 3,
+#     character_id: 1,
+#     round: 12
+#   },
+#   ...
+# ]
+@history = []
+@round   = 1
+@serpent = @characters[1] # Temporary...
 
 puts 'The primary goal of DestinyQuest is to equip your hero with better weapons, armour and equipment.'
 
