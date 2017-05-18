@@ -68,6 +68,7 @@ class Character
       'backpack' => [nil, nil, nil, nil, nil],
 
       # Special abilities (combat, modifier, passive, speed)
+      'ability_ids' => [],
       'special_abilities' => {
         # Nothing here but dust...
       },
@@ -98,8 +99,18 @@ class Character
     @data[key] = value
   end
 
-  def add(key, value)
+  # @author Vilmos Csizmadia
+  # @version 20170518
+  def abilities
+    list = []
 
+    self['ability_ids'].each do |id|
+      if a = find_ability(id)
+        list << a
+      end
+    end
+
+    list
   end
 
   # def data
@@ -109,6 +120,12 @@ class Character
   # def get(key)
   #   @data[key]
   # end
+
+  # @author Vilmos Csizmadia
+  # @version 20170515
+  def has_ability_by_id?(ability_id)
+    @data['ability_ids'].include?(ability_id)
+  end
 
   def include?(key, value)
     @data[key].include?(value)
@@ -133,16 +150,16 @@ def get_character(number = nil, name = nil)
   puts "... get_character(#{number.class.inspect}, #{name.inspect})".light_black
 
   if number && number.instance_of?(Integer)
-    @characters[number - 1]
+    $characters[number - 1]
   elsif name && name.instance_of?(String)
-    @characters.detect {|c| c['name'].downcase == name.downcase}
+    $characters.detect {|c| c['name'].downcase == name.downcase}
   end
 end
 
 # @author Vilmos Csizmadia
 # @version 20170430
 def list_characters
-  @characters.each_with_index do |character, i|
+  $characters.each_with_index do |character, i|
     puts "#{i + 1}\t#{character['name']}"
     # ap character
   end
@@ -167,7 +184,7 @@ end
 #######################
 #######################
 
-# @characters = []
+# $characters = []
 
 ########
 # Hero #
@@ -178,9 +195,9 @@ end
 # })
 # c['attributes']['health'] = 30
 # 
-# @characters << c
+# $characters << c
 
-@characters = [
+$characters = [
   ########
   # Hero #
   ########
@@ -193,6 +210,11 @@ end
     # 'speed'  => 8,
 
     # Special abilities (combat, modifier, passive, speed)
+    'ability_ids' => [
+      5, # Dominate
+      3, # Fearless
+      4  # Savagery
+    ],
     'special_abilities' => {
       # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
       'dominate' => {
@@ -235,6 +257,10 @@ end
     'speed'  => 5,
 
     # Special abilities (combat, modifier, passive, speed)
+    'ability_ids' => [
+      2 # Ferocity
+    ],
+    # DEPRECATED:
     'special_abilities' => {
       # Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round.
       'ferocity' => {
@@ -255,6 +281,9 @@ end
     'health' => 12,
 
     # Special abilities (combat, modifier, passive, speed)
+    'ability_ids' => [
+      1 # Venom
+    ],
     'special_abilities' => {
       # Venom (pa): If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.
       'venom' => {

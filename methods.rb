@@ -1,15 +1,15 @@
 puts '... methods.rb'.light_black
 
 def combat(a, b)
-  @history = []
-  @round   = 1
+  $history = []
+  $round   = 1
 
   # TODO: Break this down into different actions. We cannot just have a simple 'combat' method of course...
   while true
     loser  = nil
     winner = nil
 
-    puts "\nRound #{@round}"
+    puts "\nRound #{$round}"
 
     ########
     # Hook #
@@ -110,19 +110,17 @@ def combat(a, b)
           break
         end
 
-        ########
-        # Hook #
-        ########
-        # Winner damages loser.
-        # Special ability: 'ferocity'
-        # Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round.
-        if winner['special_abilities'].has_key?('ferocity')
+        ##############################
+        # Hook: Winner damages loser #
+        ##############################
+        # Ferocity
+        if winner.has_ability_by_id?(2)
           winner['statuses']['ferocious'] = {'speed' => 7} # , 'turns' => 1
           puts "#{winner['name']} is ferocious!".light_black
         end
 
         # Special ability: 'venom'
-        # if winner['special_abilities'].include?('venom') && !loser['statuses'].include?('poisoned')
+        # if winner.has_ability_by_id?(1) && !loser['statuses'].include?('poisoned')
         #   loser['statuses'].push('poisoned')
         #   puts "#{loser['name']} is poisoned!"
         # end
@@ -159,7 +157,7 @@ def combat(a, b)
     #   end
     # end
 
-    @round += 1
+    $round += 1
   end
 end
 
@@ -200,29 +198,29 @@ def skill_selector(character, types = [])
   abilities = []
 
   # Determine which Abilities are (still) usable.
-  character['special_abilities'].each do |key, ability|
-    if types.include?(ability['type'])
+  character.abilities.each do |a|
+    if types.include?(a['type'])
       # Unless:
       # - The Ability can only be used once per combat and it has already been used...
       # - The Ability can only be used once per combat round and it has already been used this round...
       unless (
-        ability['is_usable_once_per_combat'] && @history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == ability['id']}
+        a['is_usable_once_per_combat'] && $history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == a['id']}
       ) || (
-        ability['is_usable_once_per_round'] && @history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == ability['id'] && h['round'] == @round}
+        a['is_usable_once_per_round'] && $history.any? {|h| h['character_id'] == character['id'] && h['ability_id'] == a['id'] && h['round'] == $round}
       )
-        abilities << ability
+        abilities << a
       end
     end
   end
 
-  puts @history.inspect.light_black
+  puts $history.inspect.light_black
   puts abilities.inspect.light_black
 
   if abilities.any?
     puts 'Select an ability to use:'
 
     abilities.each do |a|
-      puts "#{a['id']}\t#{a['name']}"
+      puts "#{a['id']}\t#{a['name']}\t(#{a['type']})\t#{stylize(a['description'])}"
     end
 
     id = gets.strip.to_i
@@ -257,11 +255,18 @@ def skill_selector(character, types = [])
       #################
 
       # Only once an Ability gets used is the (combat) history updated.
-      @history << {
+      $history << {
         'ability_id'   => ability['id'],
         'character_id' => character['id'],
-        'round'        => @round
+        'round'        => $round
       }
     end
   end
+end
+
+# @author Vilmos Csizmadia
+# @version 20170518
+def stylize(string)
+  # string.gsub(' _', " \e[1m").gsub('_ ', "\e[22m ") # Bold
+  string.gsub(' _', " \e[4m").gsub('_ ', "\e[24m ")   # Underline
 end

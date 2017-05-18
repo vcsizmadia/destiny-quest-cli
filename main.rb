@@ -1,6 +1,33 @@
 require 'awesome_print' # 'awesome_print' gem, required for using 'ap'
 require 'colorize'      # 'colorize' gem, required for using '.red', '.yellow', etc.
+require 'ap'
 require 'pp'
+
+AwesomePrint.defaults = {
+  :indent => -2,
+  sort_keys: true,
+  :color => {
+    :args       => :yellowish,
+    :array      => :blue,
+    :bigdecimal => :blue,
+    :class      => :yellow,
+    :date       => :greenish,
+    :falseclass => :red,
+    :fixnum     => :blue,
+    :float      => :blue,
+    :hash       => :cyanish,
+    :keyword    => :cyan,
+    :method     => :purpleish,
+    :nilclass   => :red,
+    :rational   => :blue,
+    :string     => :yellowish,
+    :struct     => :pale,
+    :symbol     => :cyanish,
+    :time       => :greenish,
+    :trueclass  => :green,
+    :variable   => :cyanish
+  }
+}
 
 puts "\nLoading...".light_black
 
@@ -14,7 +41,10 @@ require './methods.rb'
 ###################
 # is_success = roll + roll + character['<name of attribute being tested>'] >= <value of attribute treshold>
 
-@hero    = @characters[0] # Temporary...
+####################
+# Global Variables #
+####################
+$hero    = $characters[0] # Temporary...
 # Stores the list of Abilities used by Characters. Each combat should have detailed history, and this is first step in that direction. Example:
 # [
 #   {
@@ -24,13 +54,15 @@ require './methods.rb'
 #   },
 #   ...
 # ]
-@history = []
-@round   = 1
-@serpent = @characters[1] # Temporary...
+$history = []
+$round   = 1
+$serpent = $characters[1] # Temporary...
 
 puts 'The primary goal of DestinyQuest is to equip your hero with better weapons, armour and equipment.'
 
 hp 'Commands'
+puts '- a    ... Shows a specific ability.'
+puts '- a *  ... Lists all the abilities.'
 puts '- c    ... Shows a specific character.'
 puts '- c *  ... Lists all the characters.'
 puts '- l i  ... Lists the items.'
@@ -39,15 +71,26 @@ puts '- e    ... Equips item.'
 puts '- r    ... Removes item in the specified equipment slot.'
 puts '- x    ... Exits.'
 
-# puts '- reset ... Resets the characters'
-
 input = ''
 
 while input != 'x'
   print ': '
-  input = gets.strip # Remove all the crap.
+  input = gets.strip
 
   case input
+  ################
+  # Show Ability #
+  ################
+  when 'a'
+    puts 'Enter the ID of the ability:'
+    id = gets.strip.to_i
+
+    show_ability(id) if id > 0
+  ##################
+  # List Abilities #
+  ##################
+  when 'a *'
+    list_abilities
   ##################
   # Show Character #
   ##################
@@ -71,12 +114,12 @@ while input != 'x'
   when 'e'
     puts 'Equip what?'
     item_name = gets.strip
-    equip_item(@hero, item_name)
+    equip_item($hero, item_name)
   #########
   # Fight #
   #########
   when 'f'
-    combat(@characters[0], @characters[1])
+    combat($characters[0], $characters[1])
   #############
   # Show Item #
   #############
@@ -100,7 +143,7 @@ while input != 'x'
   when 'r'
     puts 'Remove which equipment?'
     equipment_name = gets.strip
-    remove_item(@hero, equipment_name)
+    remove_item($hero, equipment_name)
   end
 end
 
