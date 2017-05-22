@@ -65,7 +65,7 @@ puts '- a    ... Shows a specific ability.'
 puts '- a *  ... Lists all the abilities.'
 puts '- c    ... Shows a specific character.'
 puts '- c *  ... Lists all the characters.'
-puts '- l i  ... Lists the items.'
+puts '- i    ... Show a specific item (or list them all).'
 puts '- f    ... Initiates combat.'
 puts '- e    ... Equips item.'
 puts '- r    ... Removes item in the specified equipment slot.'
@@ -86,11 +86,13 @@ while input != 'x'
     id = gets.strip.to_i
 
     show_ability(id) if id > 0
+
   ##################
   # List Abilities #
   ##################
   when 'a *'
     list_abilities
+
   ##################
   # Show Character #
   ##################
@@ -103,40 +105,46 @@ while input != 'x'
     else
       show_character(nil, identifier)
     end
+
   ###################
   # List Characters #
   ###################
   when 'c *'
     list_characters
+
   #########
   # Equip #
   #########
   when 'e'
-    puts 'Equip what?'
-    item_name = gets.strip
-    equip_item($hero, item_name)
+    puts 'Enter the ID of the item you wish to equip:'
+    id = gets.strip.to_i
+
+    if item = Item.find(id)
+      $hero.equip(item)
+    end
+
   #########
   # Fight #
   #########
   when 'f'
     combat($characters[0], $characters[1])
-  #############
-  # Show Item #
-  #############
-  when 'i'
-    puts 'Which item?'
-    identifier = gets.strip
 
-    if identifier.to_i > 0
-      show_item(identifier.to_i, nil)
+  #########
+  # Items #
+  #########
+  when 'i'
+    puts 'Enter the ID of the item (or \'*\' to list them all):'
+    input = gets.strip
+
+    if input == '*'
+      Item.list
+    elsif i = Item.find(input.to_i)
+      hp i['name']
+      ap i.data
     else
-      show_item(nil, identifier)
+      puts 'Unable to find the specified item.'.red
     end
-  ##############
-  # List Items #
-  ##############
-  when 'l i'
-    list_items
+
   ##########
   # Remove #
   ##########

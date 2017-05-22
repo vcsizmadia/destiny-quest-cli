@@ -1,5 +1,3 @@
-# require 'awesome_print' # 'awesome_print' gem, required for using 'ap'
-
 puts '... abilities.rb'.light_black
 
 class Ability
@@ -18,6 +16,12 @@ class Ability
   # Class Methods #
   #################
 
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def self.find(id)
+    $abilities.detect {|a| a['id'] == id}
+  end
+
   ####################
   # Instance Methods #
   ####################
@@ -35,29 +39,12 @@ class Ability
   end
 end
 
-# @author Vilmos Csizmadia
-# @version 20170518
-def find_ability(id)
-  $abilities.detect {|a| a['id'] == id}
-end
+
 
 # @author Vilmos Csizmadia
 # @version 20170518
 def list_abilities
   $abilities.each {|a| puts "#{a['id']}\t#{a['name']}"}
-end
-
-# @author Vilmos Csizmadia
-# @version 20170516
-def show_ability(id)
-  puts "... show_ability(#{id})".light_black
-
-  if a = find_ability(id)
-    hp a['name']
-    ap a.data
-  else
-    puts 'Unable to find the specified ability.'.red
-  end
 end
 
 # The highest ID is currently 5.

@@ -265,8 +265,12 @@ def skill_selector(character, types = [])
 end
 
 # @author Vilmos Csizmadia
-# @version 20170518
+# @note Unfortuantely, this does not work with the 'colorize' gem.
+# @version 20170521
 def stylize(string)
-  # string.gsub(' _', " \e[1m").gsub('_ ', "\e[22m ") # Bold
-  string.gsub(' _', " \e[4m").gsub('_ ', "\e[24m ")   # Underline
+  # Bold
+  # string.gsub(' _', " \e[1m").gsub('_ ', "\e[22m ")
+
+  # Underline
+  string.gsub(' _', " \e[4m").gsub('_ ', "\e[24m ").gsub('_.', "\e[24m.")
 end

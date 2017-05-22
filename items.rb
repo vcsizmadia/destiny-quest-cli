@@ -1,93 +1,121 @@
 puts '... items.rb'.light_black
 
-# @author Vilmos Csizmadia
-# @version 20170430
-def equip_item(character, item_name)
-  character_name = character['name']
+class Item
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def initialize(hash = {})
+    @data = {
+      'ability_id' => nil,
+      'armour'     => nil,
+      'brawn'      => nil,
+      'category'   => nil,
+      'equipment'  => nil,
+      'id'         => nil,
+      'magic'      => nil,
+      'name'       => nil,
+      'speed'      => nil
+    }
 
-  if item = get_item(item_name)
-    equipment = item['equipment']
+    @data.merge!(hash)
+  end
 
-    puts "\nEquipping '#{item['name']}' into '#{equipment}' of '#{character_name}'...".light_black
+  #################
+  # Class Methods #
+  #################
 
-    if character.has_key?(equipment)
-      # There is a lot to this, so handle it in a separate method.
-      remove_item(character, equipment)
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def self.find(id)
+    $items.detect {|i| i['id'] == id}
+  end
 
-      character[equipment] = item
+  # @author Vilmos Csizmadia
+  # @version 20170521
+  def self.list
+    $items.each {|i| puts "#{i['id']}\t#{i['name']}\t#{i['equipment']}"}
+    # .each_with_index do |item, i|
+    #   puts "#{i + 1}\t#{item['name']}\t#{item}"
+    # end
+  end
 
-      ##############
-      # Attributes #
-      ##############
-      if item.has_key?('attributes') && item['attributes'].instance_of?(Hash)
-        item['attributes'].keys.each do |a|
-          value = item['attributes'][a]
-          character[a] += value
-          puts "... +#{value} to '#{a}'".light_black
-        end
+  ####################
+  # Instance Methods #
+  ####################
 
-        # '... Them attributes are changin!'
-      else
-        '... No attribute changes necessary.'
-      end
-    else
-      "... '#{character_name}' cannot have anything equipped in '#{equipment}'."
-    end
-  else
-    puts "... Unable to find '#{item_name}'."
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def [](key)
+    @data[key]
+  end
+
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def []=(key, value)
+    @data[key] = value
+  end
+
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def data
+    @data
   end
 end
 
-# @author Vilmos Csizmadia
-# @version 20170430
-def get_item(name)
-  if name
-    @items.detect {|i| i['name'].downcase == name.downcase}
-  end
-end
+##################
+##################
+## Item Library ##
+##################
+##################
 
-# @author Vilmos Csizmadia
-# @version 20170430
-def list_items
-  @items.each_with_index do |item, i|
-    puts "#{i + 1}\t#{item['name']}\t#{item}"
-  end
-end
+# The highest ID is currently 4.
 
-# @author Vilmos Csizmadia
-# @version 20170430
-def remove_item(character, equipment)
-  if character.has_key?(equipment)
-    if item = character[equipment]
-      "\nRemoving '#{item['name']}' from '#{equipment}' of '#{character}'..."
-      ##############
-      # Attributes #
-      ##############
-      if item.has_key?('attributes') && item['attributes'].instance_of?(Array)
-        '... Them attributes are changin!'
-      else
-        '... No attribute changes necessary.'
-      end
+$items = [
+  ################
+  # Mauler's maw #
+  ################
+  Item.new({
+    'ability_id' => 3, # Fearless
+    'armour'     => 1,
+    'equipment'  => 'head',
+    'id'         => 2,
+    'name'       => 'Mauler\'s maw',
+    'speed'      => 1
+  }),
 
-      character[equipment] = nil
-    else
-      "... '#{character}' does not have anything equipped in '#{equipment}'."
-    end
-  else
-    "... '#{character}' cannot have anything equipped in '#{equipment}'."
-  end
-end
+  #############
+  # Rage claw #
+  #############
+  Item.new({
+    'ability_id' => 5, # Dominate
+    'brawn'      => 1,
+    'category'   => 'fist weapon',
+    'equipment'  => 'left hand',
+    'id'         => 4,
+    'name'       => 'Rage claw',
+    'speed'      => 1
+  }),
 
-@items = [
-  # The apprentice
-  {
-    'attributes' => {
-      'brawn' => 1,
-      'magic' => 1
-    },
+  ###############
+  # Savage pelt #
+  ###############
+  Item.new({
+    'ability_id' => 4, # Savagery
+    'brawn'      => 1,
+    'equipment'  => 'cloak',
+    'id'         => 3,
+    'magic'      => 1,
+    'name'       => 'Savage pelt'
+  }),
+
+  ##################
+  # The apprentice #
+  ##################
+  Item.new({
+    'brawn'     => 1,
     'category'  => 'sword',
     'equipment' => 'main hand',
     'id'        => 1,
+    'magic'     => 1,
     'name'      => 'The apprentice'
-  }
+  })
 ]

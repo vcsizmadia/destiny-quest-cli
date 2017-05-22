@@ -37,13 +37,12 @@ class Character
       'roll' => 0, # Can be modified by Abilities (such as 'Dominate').
       'name' => nil,
 
-      # 'attributes' = {
-        'armour' => 0,
-        'brawn'  => 0,
-        'health' => 0,
-        'magic'  => 0,
-        'speed'  => 0,
-      # },
+      # Attributes
+      'armour' => 0,
+      'brawn'  => 0,
+      'health' => 0,
+      'magic'  => 0,
+      'speed'  => 0,
 
       # Used for temporary attribute changes during combat.
       # 'overrides' => [],
@@ -87,6 +86,20 @@ class Character
     @data.merge!(hash)
   end
 
+  #################
+  # Class Methods #
+  #################
+
+  def self.attributes
+    [
+      'armour',
+      'brawn',
+      'health',
+      'magic',
+      'speed'
+    ]
+  end
+
   ####################
   # Instance Methods #
   ####################
@@ -105,7 +118,7 @@ class Character
     list = []
 
     self['ability_ids'].each do |id|
-      if a = find_ability(id)
+      if a = Ability.find(id)
         list << a
       end
     end
@@ -113,9 +126,49 @@ class Character
     list
   end
 
-  # def data
-  #   @data
-  # end
+  # @author Vilmos Csizmadia
+  # @version 20170519
+  def data
+    @data
+  end
+
+  # @author Vilmos Csizmadia
+  # @version 20170521
+  def equip(item)
+    equipment = item['equipment']
+
+    puts "\n'#{self['name']}' is attempting to equip the '#{equipment}' item '#{item['name']}'...".light_black
+
+    if self.data.has_key?(equipment)
+      self.unequip(equipment) if self[equipment]
+
+      ##############
+      # Attributes #
+      ##############
+      Character.attributes.each do |a|
+        # If equipping this Item modifies the attribute...
+        if value = item[a]
+          self[a] += value
+          puts "... +#{value} to '#{a}'.".light_black
+        end
+      end
+
+      ###########
+      # Ability #
+      ###########
+      # If equipping this Item adds an Ability...
+      if item['ability_id'] && ability = Ability.find(item['ability_id'])
+        self['ability_ids'] << ability['id']
+        puts "... Gained the '#{ability['name']}' ability.".light_black
+      end
+
+      self[equipment] = item['id']
+
+      puts "... #{self['name']} has successfully equipped '#{item['name']}'.".light_black
+    else
+      puts "... '#{self['name']}' is unable to equip '#{equipment}' items.".red
+    end
+  end
 
   # def get(key)
   #   @data[key]
@@ -142,6 +195,49 @@ class Character
   # def set(key, value)
   #   @data[key] = value
   # end
+
+  # @author Vilmos Csizmadia
+  # @version 20170521
+  def unequip(equipment)
+    puts "... '#{self['name']}' is attempting to unequip the '#{equipment}' item...".light_black
+
+    if self.data.has_key?(equipment)
+      if item = Item.find(self[equipment])
+        puts "...... Found '#{item['name']}'.".light_black
+
+        ##############
+        # Attributes #
+        ##############
+        Character.attributes.each do |a|
+          # If unequipping this Item modifies the attribute...
+          if value = item[a]
+            self[a] -= value
+            puts "...... -#{value} to '#{a}'.".light_black
+          end
+        end
+
+        ###########
+        # Ability #
+        ###########
+        # If unequipping this Item removes an Ability...
+        if item['ability_id'] && index = self['ability_ids'].index(item['ability_id'])
+          ability = Ability.find(item['ability_id'])
+
+          self['ability_ids'].delete_at(index)
+
+          puts "...... Lost the '#{ability['name']}' ability.".light_black
+        end
+
+        puts "...... #{self['name']} has successfully unequipped '#{item['name']}'.".light_black
+      else
+        puts "... '#{self['name']}' does not have anything equipped in '#{equipment}'.".light_black
+      end
+
+      self[equipment] = nil
+    else
+      puts "... '#{self['name']}' is unable to equip '#{equipment}' items.".red
+    end
+  end
 end
 
 # @author Vilmos Csizmadia
@@ -172,7 +268,7 @@ def show_character(number = nil, name = nil)
 
   if c = get_character(number, name)
     hp c['name']
-    ap c
+    ap c.data
   else
     puts 'Unable to find the specified character.'.red
   end
