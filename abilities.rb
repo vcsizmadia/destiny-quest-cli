@@ -47,13 +47,13 @@ def list_abilities
   $abilities.each {|a| puts "#{a['id']}\t#{a['name']}"}
 end
 
-# The highest ID is currently 5.
-
 #####################
 #####################
 ## Ability Library ##
 #####################
 #####################
+
+# The highest ID is currently 6.
 
 $abilities = [
   ############
@@ -86,6 +86,17 @@ $abilities = [
     'description' => nil,
     'id'          => 2,
     'name'        => 'Ferocity',
+    'type'        => nil
+  }),
+
+  ###################
+  # Punishing blows #
+  ###################
+  # "Punishing blows: Each time Humbaroth inflicts health damage, your _armour_ is lowered by 1. (Your _armour_ value is restored after the combat is over.)"
+  Ability.new({
+    'description' => nil,
+    'id'          => 6,
+    'name'        => 'Punishing blows',
     'type'        => nil
   }),
 

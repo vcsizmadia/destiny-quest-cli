@@ -119,6 +119,12 @@ def combat(a, b)
           puts "#{winner['name']} is ferocious!".light_black
         end
 
+        # Punishing blows
+        if winner.has_ability_by_id?(6) && loser['armour'] >= 1
+          loser['armour'] -= 1 
+          puts "#{loser['name']} loses 1 'armour' due to the 'Punishing blows' ability.".light_black
+        end
+
         # Special ability: 'venom'
         # if winner.has_ability_by_id?(1) && !loser['statuses'].include?('poisoned')
         #   loser['statuses'].push('poisoned')

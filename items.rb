@@ -29,15 +29,6 @@ class Item
     $items.detect {|i| i['id'] == id}
   end
 
-  # @author Vilmos Csizmadia
-  # @version 20170521
-  def self.list
-    $items.each {|i| puts "#{i['id']}\t#{i['name']}\t#{i['equipment']}"}
-    # .each_with_index do |item, i|
-    #   puts "#{i + 1}\t#{item['name']}\t#{item}"
-    # end
-  end
-
   ####################
   # Instance Methods #
   ####################
