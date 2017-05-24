@@ -177,8 +177,7 @@ while input != 'x'
   # Fight #
   #########
   when 'f'
-    # combat($characters[0], $characters[1])
-    combat($characters[0], Character.find(4))
+    combat(Character.find(1), Character.find(6))
 
   #########
   # Items #

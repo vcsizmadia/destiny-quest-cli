@@ -53,9 +53,19 @@ end
 #####################
 #####################
 
-# The highest ID is currently 6.
+# The highest ID is currently 8.
 
 $abilities = [
+  ###########
+  # Charged #
+  ###########
+  # 'Charged: Each time you inflict health damage on the elemental, you take 2 damage in return. This ability ignores _armour_.'
+  Ability.new({
+    'description' => nil,
+    'id'          => 7,
+    'name'        => 'Charged'
+  }),
+
   ############
   # Dominate #
   ############
@@ -85,8 +95,17 @@ $abilities = [
   Ability.new({
     'description' => nil,
     'id'          => 2,
-    'name'        => 'Ferocity',
-    'type'        => nil
+    'name'        => 'Ferocity'
+  }),
+
+  ##############
+  # Fiery aura #
+  ##############
+  # "Fiery aura: You automatically take 3 damage at the end of each combat round. This ability ignores _armour_."
+  Ability.new({
+    'description' => nil,
+    'id'          => 8,
+    'name'        => 'Fiery aura'
   }),
 
   ###################
@@ -96,8 +115,7 @@ $abilities = [
   Ability.new({
     'description' => nil,
     'id'          => 6,
-    'name'        => 'Punishing blows',
-    'type'        => nil
+    'name'        => 'Punishing blows'
   }),
 
   ############

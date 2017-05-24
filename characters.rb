@@ -223,7 +223,7 @@ end
 #######################
 #######################
 
-# The highest ID is currently 4.
+# The highest ID is currently 6.
 
 # $characters = []
 
@@ -304,6 +304,26 @@ $characters = [
     ]
   }),
 
+  ###################
+  # Malachi of fire #
+  ###################
+  # "Humbaroth the giant"
+  Character.new({
+    'id'   => 6,
+    'name' => 'Malachi of fire',
+
+    # Attributes
+    'armour' => 2,
+    'health' => 20,
+    'magic'  => 4,
+    'speed'  => 4,
+
+    # Special abilities (combat, modifier, passive, speed)
+    'ability_ids' => [
+      8 # Fiery aura
+    ]
+  }),
+
   ##########
   # Mauler #
   ##########
@@ -352,5 +372,24 @@ $characters = [
         'name' => 'Venom'
       }
     }
+  }),
+
+  ###################
+  # Storm elemental #
+  ###################
+  Character.new({
+    'id'   => 5,
+    'name' => 'Storm elemental',
+
+    # Attributes
+    'armour' => 1,
+    'health' => 25,
+    'magic'  => 1,
+    'speed'  => 2,
+
+    # Special abilities (combat, modifier, passive, speed)
+    'ability_ids' => [
+      7 # Charged
+    ]
   })
 ]

@@ -84,7 +84,7 @@ def combat(a, b)
     # THIS WILL BE A PAIN IN THE ASS!
 
     if winner
-      puts "... #{winner['name']} has a higher attack speed.".light_black
+      puts "... #{winner['name']} (#{winner['health']}) has a higher attack speed.".light_black
 
       # For now, only the winner gets to select an Ability.
       skill_selector(winner, ['mo'])
@@ -105,6 +105,7 @@ def combat(a, b)
 
         puts "... #{loser['name']} takes #{damage} points of health damage."
 
+        # Check if the "loser" is still alive.
         if loser['health'] <= 0
           puts "... #{loser['name']} has been defeated."
           break
@@ -113,6 +114,12 @@ def combat(a, b)
         ##############################
         # Hook: Winner damages loser #
         ##############################
+        # Charged
+        if loser.has_ability_by_id?(7)
+          winner['health'] -= 2
+          puts "#{winner['name']} takes 2 damage due to #{loser['name']}'s '#{Ability.find(7)['name']}' special ability!".light_black
+        end
+
         # Ferocity
         if winner.has_ability_by_id?(2)
           winner['statuses']['ferocious'] = {'speed' => 7} # , 'turns' => 1
@@ -130,6 +137,12 @@ def combat(a, b)
         #   loser['statuses'].push('poisoned')
         #   puts "#{loser['name']} is poisoned!"
         # end
+
+        # Check if the "winner" is still alive.
+        if winner['health'] <= 0
+          puts "... #{winner['name']} has been defeated."
+          break
+        end
       end
     end
 
@@ -141,6 +154,17 @@ def combat(a, b)
     ########
     # Hook #
     ########
+    # Fiery aura
+    if a.has_ability_by_id?(8)
+      b['health'] -= 3
+      puts "#{b['name']} takes 3 damage due to #{a['name']}'s '#{Ability.find(8)['name']}' special ability!".light_black
+    end
+
+    if b.has_ability_by_id?(8)
+      a['health'] -= 3
+      puts "#{a['name']} takes 3 damage due to #{b['name']}'s '#{Ability.find(8)['name']}' special ability!".light_black
+    end
+
     # Apply damage of passive effects, such as 'bleed' or 'venom'.
     # THIS IS HORRENDOUS!!!
     # if a['statuses'].include?('poisoned')
@@ -162,6 +186,19 @@ def combat(a, b)
     #     break
     #   end
     # end
+
+    # [VC] We should create a hook for health management. We should not have to keep checking Character health each time something happens.
+    # Check if Character "a" is still alive.
+    if a['health'] <= 0
+      puts "... #{a['name']} has been defeated."
+      break
+    end
+
+    # Check if Character "b" is still alive.
+    if b['health'] <= 0
+      puts "... #{b['name']} has been defeated."
+      break
+    end
 
     $round += 1
   end
