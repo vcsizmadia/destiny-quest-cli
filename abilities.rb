@@ -1,6 +1,10 @@
 puts '... abilities.rb'.light_black
 
+$abilities = []
+
 class Ability
+  # @author Vilmos Csizmadia
+  # @version 20170526
   def initialize(hash = {})
     @data = {
       'id'                        => nil,
@@ -17,9 +21,23 @@ class Ability
   #################
 
   # @author Vilmos Csizmadia
+  # @version 20170526
+  def self.add(hash)
+    $abilities << Ability.new({
+      'id' => $abilities.length + 1
+    }.merge!(hash))
+  end
+
+  # @author Vilmos Csizmadia
   # @version 20170519
   def self.find(id)
     $abilities.detect {|a| a['id'] == id}
+  end
+
+  # @author Vilmos Csizmadia
+  # @version 20170526
+  def self.find_by_name(name)
+    $abilities.detect {|a| a['name'] == name}
   end
 
   ####################
@@ -39,104 +57,109 @@ class Ability
   end
 end
 
-
-
-# @author Vilmos Csizmadia
-# @version 20170518
-def list_abilities
-  $abilities.each {|a| puts "#{a['id']}\t#{a['name']}"}
-end
-
 #####################
 #####################
 ## Ability Library ##
 #####################
 #####################
 
-# The highest ID is currently 8.
+###########
+# Charged #
+###########
+# 'Charged: Each time you inflict health damage on the elemental, you take 2 damage in return. This ability ignores _armour_.'
+Ability.add({
+  'name' => 'Charged'
+})
 
-$abilities = [
-  ###########
-  # Charged #
-  ###########
-  # 'Charged: Each time you inflict health damage on the elemental, you take 2 damage in return. This ability ignores _armour_.'
-  Ability.new({
-    'description' => nil,
-    'id'          => 7,
-    'name'        => 'Charged'
-  }),
+#########
+# Charm #
+#########
+Ability.add({
+  'description' => 'You may re-roll one of your hero\'s die any time during a combat. You must accept the result of the second roll. If you have multiple items with the _charm_ ability, each one give you a re-roll.',
+  'name'        => 'Charm',
+  'type'        => 'mo'
+})
 
-  ############
-  # Dominate #
-  ############
-  Ability.new({
-    'description'               => 'Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.',
-    'id'                        => 5,
-    'is_usable_once_per_combat' => true,
-    'name'                      => 'Dominate',
-    'type'                      => 'mo'
-  }),
+############
+# Dominate #
+############
+Ability.add({
+  'description'               => 'Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.',
+  'is_usable_once_per_combat' => true,
+  'name'                      => 'Dominate',
+  'type'                      => 'mo'
+})
 
-  ############
-  # Fearless #
-  ############
-  Ability.new({
-    'description'               => 'Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.',
-    'id'                        => 3,
-    'is_usable_once_per_combat' => true,
-    'name'                      => 'Fearless',
-    'type'                      => 'sp'
-  }),
+############
+# Fearless #
+############
+Ability.add({
+  'description'               => 'Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.',
+  'is_usable_once_per_combat' => true,
+  'name'                      => 'Fearless',
+  'type'                      => 'sp'
+})
 
-  ############
-  # Ferocity #
-  ############
-  # "Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round."
-  Ability.new({
-    'description' => nil,
-    'id'          => 2,
-    'name'        => 'Ferocity'
-  }),
+############
+# Ferocity #
+############
+# "Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round."
+Ability.add({
+  'name' => 'Ferocity'
+})
 
-  ##############
-  # Fiery aura #
-  ##############
-  # "Fiery aura: You automatically take 3 damage at the end of each combat round. This ability ignores _armour_."
-  Ability.new({
-    'description' => nil,
-    'id'          => 8,
-    'name'        => 'Fiery aura'
-  }),
+##############
+# Fiery aura #
+##############
+# "Fiery aura: You automatically take 3 damage at the end of each combat round. This ability ignores _armour_."
+Ability.add({
+  'name' => 'Fiery aura'
+})
 
-  ###################
-  # Punishing blows #
-  ###################
-  # "Punishing blows: Each time Humbaroth inflicts health damage, your _armour_ is lowered by 1. (Your _armour_ value is restored after the combat is over.)"
-  Ability.new({
-    'description' => nil,
-    'id'          => 6,
-    'name'        => 'Punishing blows'
-  }),
+##################
+# Might of stone #
+##################
+Ability.add({
+  'description'               => 'You may instantly increase your _armour_ score by 3 for one combat round. You can only use this ability once per combat.',
+  'is_usable_once_per_combat' => true,
+  'name'                      => 'Might of stone',
+  'type'                      => 'mo'
+})
 
-  ############
-  # Savagery #
-  ############
-  Ability.new({
-    'description'               => 'You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.',
-    'id'                        => 4,
-    'is_usable_once_per_combat' => true,
-    'name'                      => 'Savagery',
-    'type'                      => 'mo'
-  }),
+###################
+# Punishing blows #
+###################
+# "Punishing blows: Each time Humbaroth inflicts health damage, your _armour_ is lowered by 1. (Your _armour_ value is restored after the combat is over.)"
+Ability.add({
+  'name' => 'Punishing blows'
+})
 
-  #########
-  # Venom #
-  #########
-  # "Venom: Once you have taken damage from the serpent, at the end of every combat round you must automatically lose 2 health."
-  Ability.new({
-    'description' => 'If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.',
-    'id'          => 1,
-    'name'        => 'Venom',
-    'type'        => 'pa'
-  })
-]
+############
+# Savagery #
+############
+Ability.add({
+  'description'               => 'You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.',
+  'is_usable_once_per_combat' => true,
+  'name'                      => 'Savagery',
+  'type'                      => 'mo'
+})
+
+########
+# Slam #
+########
+Ability.add({
+  'description'               => 'Use this ability to stop your opponent rolling for damage when they have won a round. In the next combat round, your opponent\'s _speed_ is reduced by 1. You can only use this ability once per combat.',
+  'is_usable_once_per_combat' => true,
+  'name'                      => 'Slam',
+  'type'                      => 'co'
+})
+
+#########
+# Venom #
+#########
+# "Venom: Once you have taken damage from the serpent, at the end of every combat round you must automatically lose 2 health."
+Ability.add({
+  'description' => 'If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.',
+  'name'        => 'Venom',
+  'type'        => 'pa'
+})

@@ -1,8 +1,10 @@
 puts '... items.rb'.light_black
 
+$items = []
+
 class Item
   # @author Vilmos Csizmadia
-  # @version 20170519
+  # @version 20170526
   def initialize(hash = {})
     @data = {
       'ability_id' => nil,
@@ -22,6 +24,14 @@ class Item
   #################
   # Class Methods #
   #################
+
+  # @author Vilmos Csizmadia
+  # @version 20170526
+  def self.add(hash)
+    $items << Item.new({
+      'id' => $items.length + 1
+    }.merge!(hash))
+  end
 
   # @author Vilmos Csizmadia
   # @version 20170519
@@ -58,55 +68,77 @@ end
 ##################
 ##################
 
-# The highest ID is currently 4.
+##################
+# Crone's dagger #
+##################
+Item.add({
+  'category'  => 'dagger',
+  'equipment' => 'main hand',
+  'name'      => 'Crone\'s dagger',
+  'magic'     => 1,
+  'speed'     => 1
+})
 
-$items = [
-  ################
-  # Mauler's maw #
-  ################
-  Item.new({
-    'ability_id' => 3, # Fearless
-    'armour'     => 1,
-    'equipment'  => 'head',
-    'id'         => 2,
-    'name'       => 'Mauler\'s maw',
-    'speed'      => 1
-  }),
+##################
+# Gilbert's club #
+##################
+Item.add({
+  'brawn'     => 3,
+  'category'  => 'club',
+  'equipment' => 'main hand',
+  'name'      => 'Gilbert\'s club'
+})
 
-  #############
-  # Rage claw #
-  #############
-  Item.new({
-    'ability_id' => 5, # Dominate
-    'brawn'      => 1,
-    'category'   => 'fist weapon',
-    'equipment'  => 'left hand',
-    'id'         => 4,
-    'name'       => 'Rage claw',
-    'speed'      => 1
-  }),
+################
+# Mauler's maw #
+################
+Item.add({
+  'ability_id' => Ability.find_by_name('Fearless')['id'],
+  'armour'     => 1,
+  'equipment'  => 'head',
+  'name'       => 'Mauler\'s maw',
+  'speed'      => 1
+})
 
-  ###############
-  # Savage pelt #
-  ###############
-  Item.new({
-    'ability_id' => 4, # Savagery
-    'brawn'      => 1,
-    'equipment'  => 'cloak',
-    'id'         => 3,
-    'magic'      => 1,
-    'name'       => 'Savage pelt'
-  }),
+######################
+# Moth-eaten blanket #
+######################
+Item.add({
+  'equipment' => 'cloak',
+  'name'      => 'Moth-eaten blanket',
+  'speed'     => 1
+})
 
-  ##################
-  # The apprentice #
-  ##################
-  Item.new({
-    'brawn'     => 1,
-    'category'  => 'sword',
-    'equipment' => 'main hand',
-    'id'        => 1,
-    'magic'     => 1,
-    'name'      => 'The apprentice'
-  })
-]
+#############
+# Rage claw #
+#############
+Item.add({
+  'ability_id' => Ability.find_by_name('Dominate')['id'],
+  'brawn'      => 1,
+  'category'   => 'fist weapon',
+  'equipment'  => 'left hand',
+  'name'       => 'Rage claw',
+  'speed'      => 1
+})
+
+###############
+# Savage pelt #
+###############
+Item.add({
+  'ability_id' => Ability.find_by_name('Savagery')['id'],
+  'brawn'      => 1,
+  'equipment'  => 'cloak',
+  'magic'      => 1,
+  'name'       => 'Savage pelt'
+})
+
+##################
+# The apprentice #
+##################
+Item.add({
+  'brawn'     => 1,
+  'category'  => 'sword',
+  'equipment' => 'main hand',
+  'magic'     => 1,
+  'name'      => 'The apprentice'
+})

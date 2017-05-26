@@ -63,7 +63,7 @@ AwesomePrint.defaults = {
 
 puts "\nLoading...".light_black
 
-require './abilities.rb'
+require './abilities.rb' # Must go first due to Ability declarations used by Character and Item initializations.
 require './characters.rb'
 require './items.rb'
 require './methods.rb'
@@ -93,14 +93,13 @@ $serpent = $characters[1] # Temporary...
 puts 'The primary goal of DestinyQuest is to equip your hero with better weapons, armour and equipment.'
 
 hp 'Commands'
-puts '- a    ... Shows a specific ability.'
-puts '- a *  ... Lists all the abilities.'
+puts '- a    ... Show a specific ability (or list them all).'
 puts '- c    ... Show a specific character (or list them all).'
 puts '- i    ... Show a specific item (or list them all).'
-puts '- f    ... Initiates combat.'
-puts '- e    ... Equips item.'
-puts '- r    ... Removes item in the specified equipment slot.'
-puts '- x    ... Exits.'
+puts '- f    ... Initiate combat.'
+puts '- e    ... Equip an item.'
+puts '- r    ... Remove the item in the specified equipment slot.'
+puts '- x    ... Exit.'
 
 input = ''
 
@@ -109,80 +108,55 @@ while input != 'x'
   input = gets.strip
 
   case input
-  ################
-  # Show Ability #
-  ################
   when 'a'
-    puts 'Enter the ID of the ability:'
-    id = gets.strip.to_i
+    #############
+    # Abilities #
+    #############
+    puts 'Enter the ID of the ability (or \'*\' to list them all):'
+    input = gets.strip
 
-    show_ability(id) if id > 0
-
-  ##################
-  # List Abilities #
-  ##################
-  when 'a *'
-    list_abilities
-
-  ##############
-  # Characters #
-  ##############
+    if input == '*'
+      $abilities.each {|a| puts "#{a['id']}\t#{a['name']}"}
+    elsif a = Ability.find(input.to_i)
+      hp a['name']
+      ap a.data
+    else
+      puts 'Unable to find the specified ability.'.red
+    end
   when 'c'
+    ##############
+    # Characters #
+    ##############
     puts 'Enter the ID of the character (or \'*\' to list them all):'
     input = gets.strip
 
     if input == '*'
       $characters.each {|c| puts "#{c['id']}\t#{c['name']}"}
-      # $characters.each_with_index do |character, i|
-      #   puts "#{i + 1}\t#{character['name']}"
-      # end
     elsif c = Character.find(input.to_i)
       hp c['name']
       ap c.data
     else
       puts 'Unable to find the specified character.'.red
     end
-
-  ##################
-  # Show Character #
-  ##################
-  when 'c'
-    puts 'Which character?'
-    identifier = gets.strip
-
-    if identifier.to_i > 0
-      show_character(identifier.to_i, nil)
-    else
-      show_character(nil, identifier)
-    end
-
-  ###################
-  # List Characters #
-  ###################
-  when 'c *'
-    list_characters
-
-  #########
-  # Equip #
-  #########
   when 'e'
+    #########
+    # Equip #
+    #########
     puts 'Enter the ID of the item you wish to equip:'
     id = gets.strip.to_i
 
     if item = Item.find(id)
       $hero.equip(item)
     end
-
-  #########
-  # Fight #
-  #########
   when 'f'
+    #########
+    # Fight #
+    #########
     combat(Character.find(1), Character.find(6))
-
-  #########
-  # Items #
-  #########
   when 'i'
+    #########
+    # Items #
+    #########
     puts 'Enter the ID of the item (or \'*\' to list them all):'
     input = gets.strip
 
@@ -194,11 +168,10 @@ while input != 'x'
     else
       puts 'Unable to find the specified item.'.red
     end
-
-  ##########
-  # Remove #
-  ##########
   when 'r'
+    ##########
+    # Remove #
+    ##########
     puts 'Remove which equipment?'
     equipment_name = gets.strip
     remove_item($hero, equipment_name)

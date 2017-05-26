@@ -1,6 +1,10 @@
 puts '... characters.rb'.light_black
 
+$characters = []
+
 class Character
+  # @author Vilmos Csizmadia
+  # @version 20170526
   def initialize(hash = {})
     # This is basically the hero sheet.
     @data = {
@@ -60,6 +64,14 @@ class Character
   #################
   # Class Methods #
   #################
+
+  # @author Vilmos Csizmadia
+  # @version 20170526
+  def self.add(hash)
+    $characters << Character.new({
+      'id' => $characters.length + 1
+    }.merge!(hash))
+  end
 
   def self.attributes
     [
@@ -223,173 +235,161 @@ end
 #######################
 #######################
 
-# The highest ID is currently 6.
-
-# $characters = []
-
 ########
 # Hero #
 ########
-# c = Character.new({
-#   'id'   => 1,
-#   'name' => 'Hero'
-# })
-# c['attributes']['health'] = 30
-# 
-# $characters << c
+Character.add({
+  'name' => 'Hero',
 
-$characters = [
-  ########
-  # Hero #
-  ########
-  Character.new({
-    'id'   => 1,
-    'name' => 'Hero',
+  # Attributes
+  'health' => 30,
+  # 'speed'  => 8,
 
-    # Attributes
-    'health' => 30,
-    # 'speed'  => 8,
-
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      5, # Dominate
-      3, # Fearless
-      4  # Savagery
-    ],
-    'special_abilities' => {
-      # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
-      'dominate' => {
-        'id'                        => 5,
-        'is_usable_once_per_combat' => true,
-        'name'                      => 'Dominate',
-        'type'                      => 'mo'
-      },
-      # Fearless (sp): Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.
-      'fearless' => {
-        'id'                        => 3,
-        'is_usable_once_per_combat' => true,
-        'name'                      => 'Fearless',
-        'type'                      => 'sp'
-      },
-      # Savagery (mo): You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.
-      'savagery' => {
-        'id'                        => 4,
-        'is_usable_once_per_combat' => true,
-        'name'                      => 'Savagery',
-        'type'                      => 'mo'
-      },
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Dominate')['id'],
+    Ability.find_by_name('Fearless')['id'],
+    Ability.find_by_name('Savagery')['id']
+  ],
+  'special_abilities' => {
+    # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
+    'dominate' => {
+      'id'                        => 5,
+      'is_usable_once_per_combat' => true,
+      'name'                      => 'Dominate',
+      'type'                      => 'mo'
     },
+    # Fearless (sp): Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.
+    'fearless' => {
+      'id'                        => 3,
+      'is_usable_once_per_combat' => true,
+      'name'                      => 'Fearless',
+      'type'                      => 'sp'
+    },
+    # Savagery (mo): You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.
+    'savagery' => {
+      'id'                        => 4,
+      'is_usable_once_per_combat' => true,
+      'name'                      => 'Savagery',
+      'type'                      => 'mo'
+    },
+  },
 
-    # Gold crowns ("money pouch")
-    'gold' => 10
-  }),
+  # Gold crowns ("money pouch")
+  'gold' => 10
+})
 
-  #############
-  # Humbaroth #
-  #############
-  # "Humbaroth the giant"
-  Character.new({
-    'id'   => 4,
-    'name' => 'Humbaroth',
+###################
+# Goblin poachers #
+###################
+Character.add({
+  'name' => 'Goblin poachers',
 
-    # Attributes
-    'armour' => 4,
-    'brawn'  => 9,
-    'health' => 35,
-    'speed'  => 4,
+  # Attributes
+  'brawn'  => 1,
+  'health' => 20
+})
 
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      6 # Punishing blows
-    ]
-  }),
+#############
+# Humbaroth #
+#############
+# "Humbaroth the giant"
+Character.add({
+  'name' => 'Humbaroth',
 
-  ###################
-  # Malachi of fire #
-  ###################
-  # "Humbaroth the giant"
-  Character.new({
-    'id'   => 6,
-    'name' => 'Malachi of fire',
+  # Attributes
+  'armour' => 4,
+  'brawn'  => 9,
+  'health' => 35,
+  'speed'  => 4,
 
-    # Attributes
-    'armour' => 2,
-    'health' => 20,
-    'magic'  => 4,
-    'speed'  => 4,
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Punishing blows')['id']
+  ]
+})
 
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      8 # Fiery aura
-    ]
-  }),
+###################
+# Malachi of fire #
+###################
+# "Humbaroth the giant"
+Character.add({
+  'name' => 'Malachi of fire',
 
-  ##########
-  # Mauler #
-  ##########
-  Character.new({
-    'id'   => 2,
-    'name' => 'Mauler',
+  # Attributes
+  'armour' => 2,
+  'health' => 20,
+  'magic'  => 4,
+  'speed'  => 4,
 
-    # Attributes
-    'armour' => 5,
-    'brawn'  => 8,
-    'health' => 30,
-    'speed'  => 5,
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Fiery aura')['id']
+  ]
+})
 
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      2 # Ferocity
-    ],
-    # DEPRECATED:
-    'special_abilities' => {
-      # Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round.
-      'ferocity' => {
-        'id'   => 2,
-        'name' => 'Ferocity'
-      }
+##########
+# Mauler #
+##########
+Character.add({
+  'name' => 'Mauler',
+
+  # Attributes
+  'armour' => 5,
+  'brawn'  => 8,
+  'health' => 30,
+  'speed'  => 5,
+
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Ferocity')['id']
+  ],
+  # DEPRECATED:
+  'special_abilities' => {
+    # Ferocity: If Mauler wins a combat round and inflicts health damage on your hero, the beast automatically raises its _speed_ to 7 for the next combat round.
+    'ferocity' => {
+      'id'   => 2,
+      'name' => 'Ferocity'
     }
-  }),
+  }
+})
 
-  ###########
-  # Serpent #
-  ###########
-  Character.new({
-    'id'   => 3,
-    'name' => 'Serpent',
+###########
+# Serpent #
+###########
+Character.add({
+  'name' => 'Serpent',
 
-    # Attributes
-    'health' => 12,
+  # Attributes
+  'health' => 12,
 
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      1 # Venom
-    ],
-    'special_abilities' => {
-      # Venom (pa): If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.
-      'venom' => {
-        'id'   => 1,
-        'name' => 'Venom'
-      }
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Venom')['id']
+  ],
+  'special_abilities' => {
+    # Venom (pa): If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.
+    'venom' => {
+      'id'   => 1,
+      'name' => 'Venom'
     }
-  }),
+  }
+})
 
-  ###################
-  # Storm elemental #
-  ###################
-  Character.new({
-    'id'   => 5,
-    'name' => 'Storm elemental',
+###################
+# Storm elemental #
+###################
+Character.add({
+  'name' => 'Storm elemental',
 
-    # Attributes
-    'armour' => 1,
-    'health' => 25,
-    'magic'  => 1,
-    'speed'  => 2,
+  # Attributes
+  'armour' => 1,
+  'health' => 25,
+  'magic'  => 1,
+  'speed'  => 2,
 
-    # Special abilities (combat, modifier, passive, speed)
-    'ability_ids' => [
-      7 # Charged
-    ]
-  })
-]
+  # Special abilities (combat, modifier, passive, speed)
+  'ability_ids' => [
+    Ability.find_by_name('Charged')['id']
+  ]
+})
