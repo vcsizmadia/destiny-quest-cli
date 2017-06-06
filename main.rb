@@ -63,10 +63,15 @@ AwesomePrint.defaults = {
 
 puts "\nLoading...".light_black
 
-require './abilities.rb' # Must go first due to Ability declarations used by Character and Item initializations.
-require './characters.rb'
-require './items.rb'
+require './combat.rb'
 require './methods.rb'
+require './models/ability.rb' # Must go first due to Ability declarations used by Character and Item initializations.
+require './models/character.rb'
+require './models/character_ability.rb'
+require './models/item.rb'
+require './seeds/abilities.rb' # Must go first due to Ability declarations used by Character and Item initializations.
+require './seeds/characters.rb'
+require './seeds/items.rb'
 
 ###################
 # Challenge Tests #
@@ -76,17 +81,8 @@ require './methods.rb'
 ####################
 # Global Variables #
 ####################
+$combat  = nil
 $hero    = $characters[0] # Temporary...
-# Stores the list of Abilities used by Characters. Each combat should have detailed history, and this is first step in that direction. Example:
-# [
-#   {
-#     ability_id: 3,
-#     character_id: 1,
-#     round: 12
-#   },
-#   ...
-# ]
-$history = []
 $round   = 1
 $serpent = $characters[1] # Temporary...
 
@@ -134,7 +130,16 @@ while input != 'x'
       $characters.each {|c| puts "#{c['id']}\t#{c['name']}"}
     elsif c = Character.find(input.to_i)
       hp c['name']
+
+      puts "\nAttributes".light_black
+      puts '**********'.light_black
+
       ap c.data
+
+      puts "\nAbilities".light_black
+      puts '*********'.light_black
+
+      c.character_abilities.each {|ca| ap ca.data}
     else
       puts 'Unable to find the specified character.'.red
     end
@@ -152,7 +157,7 @@ while input != 'x'
     #########
     # Fight #
     #########
-    combat(Character.find(1), Character.find(6))
+    $combat = Combat.new(Character.find(1), Character.find(6)).fight
   when 'i'
     #########
     # Items #
@@ -161,20 +166,25 @@ while input != 'x'
     input = gets.strip
 
     if input == '*'
-      $items.each {|i| puts "#{i['id']}\t#{i['name']}\t#{i['equipment']}"}
+      $items.each {|i| puts "#{pad(i['id'], 3)} #{pad(i['name'], 19)} #{pad(i['equipment'], 10)} #{i.ability ? i.ability['name'] : nil}"}
     elsif i = Item.find(input.to_i)
       hp i['name']
       ap i.data
     else
       puts 'Unable to find the specified item.'.red
     end
-  when 'r'
-    ##########
-    # Remove #
-    ##########
-    puts 'Remove which equipment?'
+  when 'u'
+    ###########
+    # Unequip #
+    ###########
+    puts 'Unequip which equipment?'
+
+    Character.equipment_names.each do |e|
+      puts e if $hero[e]
+    end
+
     equipment_name = gets.strip
-    remove_item($hero, equipment_name)
+    $hero.unequip(equipment_name)
   end
 end
 

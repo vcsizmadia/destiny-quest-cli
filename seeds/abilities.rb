@@ -1,67 +1,6 @@
-puts '... abilities.rb'.light_black
+puts '... ./seeds/abilities.rb'.light_black
 
 $abilities = []
-
-class Ability
-  # @author Vilmos Csizmadia
-  # @version 20170526
-  def initialize(hash = {})
-    @data = {
-      'id'                        => nil,
-      'is_usable_once_per_combat' => false,
-      'name'                      => nil,
-      'type'                      => nil
-    }
-
-    @data.merge!(hash)
-  end
-
-  #################
-  # Class Methods #
-  #################
-
-  # @author Vilmos Csizmadia
-  # @version 20170526
-  def self.add(hash)
-    $abilities << Ability.new({
-      'id' => $abilities.length + 1
-    }.merge!(hash))
-  end
-
-  # @author Vilmos Csizmadia
-  # @version 20170519
-  def self.find(id)
-    $abilities.detect {|a| a['id'] == id}
-  end
-
-  # @author Vilmos Csizmadia
-  # @version 20170526
-  def self.find_by_name(name)
-    $abilities.detect {|a| a['name'] == name}
-  end
-
-  ####################
-  # Instance Methods #
-  ####################
-
-  def [](key)
-    @data[key]
-  end
-
-  def []=(key, value)
-    @data[key] = value
-  end
-
-  def data
-    @data
-  end
-end
-
-#####################
-#####################
-## Ability Library ##
-#####################
-#####################
 
 ###########
 # Charged #
@@ -75,19 +14,23 @@ Ability.add({
 # Charm #
 #########
 Ability.add({
-  'description' => 'You may re-roll one of your hero\'s die any time during a combat. You must accept the result of the second roll. If you have multiple items with the _charm_ ability, each one give you a re-roll.',
-  'name'        => 'Charm',
-  'type'        => 'mo'
+  'description'                 => 'You may re-roll one of your hero\'s die any time during a combat. You must accept the result of the second roll. If you have multiple items with the _charm_ ability, each one give you a re-roll.',
+  'is_usable_once_per_item'     => true,
+  'is_usable_only_after_a_roll' => true,
+  'name'                        => 'Charm',
+  'type'                        => 'mo'
 })
 
 ############
 # Dominate #
 ############
 Ability.add({
-  'description'               => 'Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.',
-  'is_usable_once_per_combat' => true,
-  'name'                      => 'Dominate',
-  'type'                      => 'mo'
+  'description'                 => 'Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.',
+  'is_usable_once_per_combat'   => true,
+  'is_usable_only_after_a_roll' => true,
+  'name'                        => 'Dominate',
+  # 'phases'                      => ['post-roll'],
+  'type'                        => 'mo'
 })
 
 ############
@@ -97,6 +40,7 @@ Ability.add({
   'description'               => 'Use this ability to raise your _speed_ by 2 for one combat round. This ability can only be used once per combat.',
   'is_usable_once_per_combat' => true,
   'name'                      => 'Fearless',
+  # 'phases'                    => ['round start'],
   'type'                      => 'sp'
 })
 
