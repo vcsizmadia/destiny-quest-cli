@@ -20,6 +20,7 @@ c = Character.add({
 # .add_ability(Ability.find_by_name('Dominate'))
 # .add_ability(Ability.find_by_name('Fearless'))
 # .add_ability(Ability.find_by_name('Savagery'))
+# c.add_ability(Ability.find_by_name('Slam'))
 
 ###################
 # Goblin poachers #

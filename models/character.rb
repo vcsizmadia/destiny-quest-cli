@@ -7,8 +7,10 @@ class Character
     @data = {
       'id'       => nil,
       'name'     => nil,
-      'roll'     => 0,   # Can be modified by Abilities (such as 'Dominate').
-      'roll_for' => nil, # 'damage', 'speed', etc.
+
+      # Combat
+      'is_roll_stopped' => false,
+      'roll'            => 0, # Can be modified by Abilities (such as 'Dominate').
 
       # Attributes
       'armour' => 0,

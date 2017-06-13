@@ -6,13 +6,17 @@ class Ability
   # @version 20170526
   def initialize(hash = {})
     @data = {
-      'id'                          => nil,
-      'is_usable_once_per_combat'   => false,
-      'is_usable_once_per_item'     => false,
-      'is_usable_only_after_a_roll' => false,
-      'name'                        => nil,
-      # 'phases'                      => [],
-      'type'                        => nil
+      'id'                              => nil,
+      'is_only_usable_against_winner'   => false, # Only usable by the loser against the winner (if winner exists)...
+      'is_only_usable_for_attack_speed' => false, # Only usable during one of the 'attack speed' steps...
+      'is_only_usable_for_damage_score' => false, # Only usable during one of the 'damage score' steps...
+      'is_only_usable_once_per_combat'  => false,
+      'is_only_usable_once_per_item'    => false, # Could be used multiple times if multiple Items grant it...
+      'is_only_usable_post_roll'        => false, # Only usable after a roll...
+      'is_only_usable_pre_roll'         => false, # Only usable before a roll...
+      'is_passive'                      => false, # Cannot be manually selected...
+      'name'                            => nil,
+      'type'                            => nil
     }
 
     @data.merge!(hash)

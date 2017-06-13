@@ -83,7 +83,6 @@ require './seeds/items.rb'
 ####################
 $combat  = nil
 $hero    = $characters[0] # Temporary...
-$round   = 1
 $serpent = $characters[1] # Temporary...
 
 puts 'The primary goal of DestinyQuest is to equip your hero with better weapons, armour and equipment.'
