@@ -2,14 +2,26 @@ puts '... ./seeds/item.rb'.light_black
 
 $items = []
 
+###################
+# Boar-hide boots #
+###################
+# TODO: Can be uncommented once the 'Steadfast' Ability has been fully implemented.
+# Item.add({
+#   'ability_id' => Ability.find_by_name('Steadfast')['id'],
+#   'armour'     => 1,
+#   'equipment'  => 'feet',
+#   'name'       => 'Boar-hide boots',
+#   'speed'      => 1
+# })
+
 ##################
 # Crone's dagger #
 ##################
 Item.add({
   'category'  => 'dagger',
   'equipment' => 'main hand',
-  'name'      => 'Crone\'s dagger',
   'magic'     => 1,
+  'name'      => 'Crone\'s dagger',
   'speed'     => 1
 })
 
@@ -21,6 +33,18 @@ Item.add({
   'brawn'      => 1,
   'equipment'  => 'chest',
   'name'       => 'Duskleaf doubloon',
+  'speed'      => 1
+})
+
+#####################
+# Essence of shadow #
+#####################
+Item.add({
+  'ability_id' => Ability.find_by_name('Chill touch')['id'],
+  'category'   => 'orb',
+  'equipment'  => 'left hand',
+  'magic'      => 1,
+  'name'       => 'Essence of shadow',
   'speed'      => 1
 })
 
@@ -78,6 +102,18 @@ Item.add({
 })
 
 ################
+# Skullbreaker #
+################
+Item.add({
+  'ability_id' => Ability.find_by_name('Pound')['id'],
+  'brawn'      => 2,
+  'category'   => 'club',
+  'equipment'  => 'main hand',
+  'name'       => 'Skullbreaker',
+  'speed'      => 1
+})
+
+################
 # Stone collar #
 ################
 Item.add({
@@ -117,4 +153,15 @@ Item.add({
   'equipment' => 'main hand',
   'magic'     => 1,
   'name'      => 'The apprentice'
+})
+
+###################
+# Trophy of bones #
+###################
+Item.add({
+  'ability_id' => Ability.find_by_name('Charm')['id'],
+  'armour'     => 1,
+  'equipment'  => 'necklace',
+  'magic'      => 1,
+  'name'       => 'Trophy of bones'
 })

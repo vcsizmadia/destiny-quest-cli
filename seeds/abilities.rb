@@ -30,6 +30,17 @@ Ability.add({
   'type'                         => 'mo'
 })
 
+###############
+# Chill touch #
+###############
+Ability.add({
+  'description'                     => 'Use this ability to reduce your opponent\'s _speed_ by 2 for one combat round. You can only use _chill touch_ once per combat.',
+  'is_only_usable_for_attack_speed' => true,
+  'is_only_usable_once_per_combat'  => true,
+  'name'                            => 'Chill touch',
+  'type'                            => 'sp'
+})
+
 ############
 # Dominate #
 ############
@@ -81,6 +92,17 @@ Ability.add({
   'type'                           => 'mo'
 })
 
+#########
+# Pound #
+#########
+Ability.add({
+  'description'                     => 'A mighty blow that increases your damage score by 3. However, in the next combat round, you must lower your _speed_ by 1. This ability can only be used once per combat.',
+  'is_only_usable_for_damage_score' => true,
+  'is_only_usable_once_per_combat'  => true,
+  'name'                            => 'Pound',
+  'type'                            => 'co'
+})
+
 ###################
 # Punishing blows #
 ###################
@@ -112,6 +134,17 @@ Ability.add({
   'name'                            => 'Slam',
   'type'                            => 'co'
 })
+
+#############
+# Steadfast #
+#############
+# TODO: To be implemented once we encounter a Character with the 'Knockdown' Ability for easier testing. Note how this needs to be applied before the first round of combat even begins. It is unlike other passive Abilities (such as 'Venom').
+# Ability.add({
+#   'description' => 'You are immune to _knockdown_. If an opponent has this ability, you can ignore it.',
+#   'is_passive'  => true,
+#   'name'        => 'Steadfast',
+#   'type'        => 'pa'
+# })
 
 #########
 # Venom #

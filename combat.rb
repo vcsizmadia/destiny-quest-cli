@@ -3,11 +3,10 @@ puts '... combat.rb'.light_black
 class Combat
   # @version 20170604
   def initialize(character_a, character_b)
-    # Keep track of the two Characters. Note: This will eventually be two arrays of Characters.
-    @a = character_a
-    @b = character_b
-
-    # Stores the list of used Character Abilities. Each combat should have a detailed history, and this is first step in that direction. Example:
+    ########
+    # Note #
+    ########
+    # The 'history' Array stores the list of used Character Abilities. Each combat should have a detailed history, and this is first step in that direction. Example:
     # [
     #   {
     #     character_ability_id: 3,
@@ -15,10 +14,13 @@ class Combat
     #   },
     #   ...
     # ]
-    @history = []
-    @loser   = nil
-    @round   = 1
-    @winner  = nil
+    @a                     = character_a
+    @b                     = character_b
+    @damage_score_modifier = 0 # This is often affected by (co) Abilities.
+    @history               = []
+    @loser                 = nil
+    @round                 = 1
+    @winner                = nil
 
     # TRYING SOMETHING NEW HERE... FOR MANIPULATING THE ACTIVITY SELECTOR!!!
     @current_character = nil # @a || @b
@@ -86,6 +88,11 @@ class Combat
             # "You must accept the result of the second roll." Assuming no other die-related Abilities can be used after this...
             set_current(@current_character, @current_step, nil)
 
+          # Chill touch (sp): Use this ability to reduce your opponent's _speed_ by 2 for one combat round. You can only use _chill touch_ once per combat.
+          when 'Chill touch'
+            other_character['current']['speed'] -= 2
+            puts "... -2 to (current) #{'speed'.underline} of #{other_character['name'].underline}.".light_black
+
           # Dominate (mo): Change the result of _one_ die you roll for damage to a [6]. You can only use this ability once per combat.
           when 'Dominate'
             puts "... #{character['name'].underline} changed the [#{character['roll']}] to a [6].".light_black
@@ -97,6 +104,17 @@ class Combat
           when 'Fearless'
             character['current']['speed'] += 2
             puts "... +2 to (current) #{'speed'.underline}.".light_black
+
+          # Might of stone (mo): You may instantly increase your _armour_ score by 3 for one combat round. You can only use this ability once per combat.
+          when 'Might of stone'
+            character['current']['armour'] += 3
+            puts "... +3 to (current) #{'armour'.underline}.".light_black
+
+          # Pound (co): A mighty blow that increases your damage score by 3. However, in the next combat round, you must lower your _speed_ by 1. This ability can only be used once per combat.
+          when 'Pound'
+            @damage_score_modifier += 3
+            character.add_fact('is recovering from pound')
+            puts "... +3 to damage score.".light_black
 
           # Savagery (mo): You may raise your _brawn_ or _magic_ score by 2 for one combat round. You can only use _savagery_ once per combat.
           when 'Savagery'
@@ -154,8 +172,9 @@ class Combat
 
     # TODO: Break this down into different actions. We cannot just have a simple 'combat' method of course...
     while true
-      @loser  = nil
-      @winner = nil
+      @damage_score_modifier = 0
+      @loser                 = nil
+      @winner                = nil
 
       puts "\nRound #{@round}"
 
@@ -166,8 +185,9 @@ class Combat
       # Idea: We may want to support 'current' systematically. It is that important to the architecture.
       [@a, @b].each do |c|
         c['current'] = {}
-        c['current']['attack speed'] = 0          # Reset this!
-        c['current']['speed']        = c['speed'] # This is all we need to save for now for the 'Ferocity' Ability.
+        c['current']['armour']       = c['armour'] # Used by the 'Might of stone' Ability.
+        c['current']['attack speed'] = 0           # Reset this!
+        c['current']['speed']        = c['speed']  # Used by the 'Ferocity' Ability.
       end
 
       ########
@@ -185,9 +205,16 @@ class Combat
           puts "Apply the effects of the 'is ferocious' fact to #{c['name']}.".light_black
         end
 
+        # Is recovering from pound?
+        if c.has_fact?('is recovering from pound')
+          c['current']['speed'] -= 1 # [VC] TODO: It is currently possible to get -1... fix this!
+          c.remove_fact('is recovering from pound')
+          puts "Apply the effects of the 'is recovering from pound' fact to #{c['name']}.".light_black
+        end
+
         # Is slammed?
         if c.has_fact?('is slammed')
-          c['current']['speed'] -= 1 # [VC] TODO: It is currently possible to get -1... fix this!
+          c['current']['speed'] -= 1
           c.remove_fact('is slammed')
           puts "Apply the effects of the 'is slammed' fact to #{c['name']}.".light_black
         end
@@ -231,10 +258,11 @@ class Combat
         # For now, only the winner gets to select an Ability. Actually, let us skip this for now, since rolling allows the character to immediately invoke the Ability selector.
         # ability_selector(@winner)
 
-        numbers      = [roll, @winner['magic'] > @winner['brawn'] ? @winner['magic'] : @winner['brawn']]
+        numbers      = [roll, @damage_score_modifier, @winner['magic'] > @winner['brawn'] ? @winner['magic'] : @winner['brawn']]
         damage_score = numbers.sum
-        damage       = damage_score - @loser['armour'] > 0 ? damage_score - @loser['armour'] : 0
+        damage       = damage_score - @loser['current']['armour'] > 0 ? damage_score - @loser['current']['armour'] : 0
 
+        puts "... Loser: #{@loser['name'].underline} ... #{@loser['armour']} -> #{@loser['current']['armour']} #{'armour'.underline}".light_black
         puts "... #{@winner['name']} Damage Score: #{numbers} => #{damage_score} => Damage: #{damage}".light_black
 
         # If the winner manages to do damage to the loser...
