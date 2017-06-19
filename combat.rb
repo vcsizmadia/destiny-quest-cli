@@ -105,6 +105,11 @@ class Combat
             character['current']['speed'] += 2
             puts "... +2 to (current) #{'speed'.underline}.".light_black
 
+          # First cut (pa): This ability allows you to inflict 1 _health_ damage to your opponent before combat begins. This ability ignores _armour_. (This ability cannot be used by assassins.)
+          when 'First cut'
+            other_character['health'] -= 1
+            puts "... -1 to #{'health'.underline} of #{other_character['name'].underline}.".light_black
+
           # Might of stone (mo): You may instantly increase your _armour_ score by 3 for one combat round. You can only use this ability once per combat.
           when 'Might of stone'
             character['current']['armour'] += 3
@@ -169,6 +174,15 @@ class Combat
     # 7      passive effects             a
     # 8      passive effects             b
     @round = 1
+
+    #################
+    # Before combat #
+    #################
+    [@a, @b].each do |c|
+      set_current(c, nil, nil)
+
+      ability_selector(c)
+    end
 
     # TODO: Break this down into different actions. We cannot just have a simple 'combat' method of course...
     while true
@@ -355,6 +369,15 @@ class Combat
       end
 
       [@a, @b].each do |c|
+        other_character = c == @a ? @b : @a
+
+        # Black sigils
+        a = Ability.find_by_name('Black sigils')
+        if c.has_ability?(a)
+          other_character['health'] -= 1
+          puts "#{other_character['name']} takes 1 damage due to #{c['name']}'s '#{a['name']}' ability!"
+        end
+
         # Venom / 'is poisoned'
         if c.has_fact?('is poisoned')
           c['health'] -= 2
@@ -393,6 +416,14 @@ class Combat
         # puts '...... Unusable due to: is_only_usable_against_winner.'.light_black
         # puts "......... Winner Character ID:            #{@winner['id']}".light_black
         # puts "......... Character Ability Character ID: #{character_ability['character_id']}".light_black
+        is_usable = false
+      end
+    end
+
+    # Restriction: is_only_usable_before_combat
+    if is_usable && ability['is_only_usable_before_combat']
+      if @current_step != nil
+        # puts '...... Unusable due to: is_only_usable_before_combat.'.light_black
         is_usable = false
       end
     end
@@ -500,6 +531,19 @@ class Combat
       ########
       # puts "... #{@current_character['name'].underline} rolled a [#{@current_character['roll']}] for #{purpose.underline}.".light_black
       puts "... #{@current_character['name'].underline} rolled a [#{@current_character['roll']}].".light_black
+
+      if [1, 2].include?(@current_character['roll'])
+        # [VC] We should have a better, attributes-driven solution for this. How about something like:
+        # - is_only_usable_post_roll = true
+        # - is_passive               = true
+        # We should not need to invoke the Ability selector in this case...
+        # Bewitched
+        a = Ability.find_by_name('Bewitched')
+        if @current_character.has_ability?(a)
+          @current_character['roll'] = rand(6) + 1
+          puts "#{@current_character['name']} re-rolled due to the #{a['name'].underline} ability and got a [#{@current_character['roll']}]!".light_black
+        end
+      end
 
       # [VC] Let's assume the Ability selector
       # A roll for damage may be modified with an available 'mo' Ability:

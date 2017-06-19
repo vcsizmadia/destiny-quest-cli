@@ -101,3 +101,18 @@ Character.add({
   'speed'  => 2
 })
 .add_ability(Ability.find_by_name('Charged'))
+
+#############
+# Zalladell #
+#############
+c = Character.add({
+  'name' => 'Zalladell',
+
+  # Attributes
+  'armour' => 4,
+  'health' => 40,
+  'magic'  => 7,
+  'speed'  => 5
+})
+c.add_ability(Ability.find_by_name('Bewitched'))
+c.add_ability(Ability.find_by_name('Black sigils'))

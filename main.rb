@@ -156,7 +156,7 @@ while input != 'x'
     #########
     # Fight #
     #########
-    $combat = Combat.new(Character.find(1), Character.find(6)).fight
+    $combat = Combat.new(Character.find(1), Character.find(8)).fight
   when 'i'
     #########
     # Items #

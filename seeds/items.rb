@@ -78,6 +78,30 @@ Item.add({
   'speed'     => 1
 })
 
+################
+# Nightbringer #
+################
+Item.add({
+  'ability_id' => Ability.find_by_name('Might of stone')['id'],
+  'brawn'      => 4,
+  'category'   => 'sword',
+  'equipment'  => 'main hand',
+  'name'       => 'Nightbringer',
+  'speed'      => 1
+})
+
+#############
+# Nightfall #
+#############
+Item.add({
+  'ability_id' => Ability.find_by_name('Might of stone')['id'],
+  'category'   => 'staff',
+  'equipment'  => 'main hand',
+  'magic'      => 4,
+  'name'       => 'Nightfall',
+  'speed'      => 1
+})
+
 #############
 # Rage claw #
 #############
@@ -87,6 +111,18 @@ Item.add({
   'category'   => 'fist weapon',
   'equipment'  => 'left hand',
   'name'       => 'Rage claw',
+  'speed'      => 1
+})
+
+###################
+# Rennie's slicer #
+###################
+Item.add({
+  'ability_id' => Ability.find_by_name('First cut')['id'],
+  'brawn'      => 1,
+  'category'   => 'dagger',
+  'equipment'  => 'left hand',
+  'name'       => 'Rennie\'s slicer',
   'speed'      => 1
 })
 
@@ -112,6 +148,13 @@ Item.add({
   'name'       => 'Skullbreaker',
   'speed'      => 1
 })
+
+###############
+# Spindlesilk #
+###############
+# (2 uses)
+# (backpack)
+# Perhaps a master clothier could do something with this fine silk.
 
 ################
 # Stone collar #

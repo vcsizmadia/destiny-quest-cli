@@ -10,6 +10,24 @@ $abilities = []
 
 # Speed (sp): These abilities can be used at the start of a combat round (before you roll for attack speed), and will eventually influence how many dice you can roll or reduce the number of dice your opponent can roll for speed. You can only use one speed ability per combat round.
 
+#############
+# Bewitched #
+#############
+# 'Bewitched: Re-roll any [1] or [2] dice results for Zalladell. The results of the re-rolled dice must be used.'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Bewitched'
+})
+
+################
+# Black sigils #
+################
+# 'Black sigils: At the end of every combat round, your hero automatically suffers 1 damage. This ability ignores _armour_.'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Black sigils'
+})
+
 ###########
 # Charged #
 ###########
@@ -80,6 +98,18 @@ Ability.add({
 Ability.add({
   'is_passive' => true,
   'name'       => 'Fiery aura'
+})
+
+#############
+# First cut #
+#############
+Ability.add({
+  'description'                    => 'This ability allows you to inflict 1 _health_ damage to your opponent before combat begins. This ability ignores _armour_. (This ability cannot be used by assassins.)',
+  'is_only_usable_before_combat'   => true,
+  'is_only_usable_once_per_combat' => true, # [VC] Added this, because it's true...
+  # 'is_passive'                   => true, # [VC] Removing this for now, because it seems using it is a choice...
+  'name'                           => 'First cut',
+  'type'                           => 'pa'
 })
 
 ##################
