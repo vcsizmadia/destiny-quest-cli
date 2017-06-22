@@ -2,6 +2,31 @@ puts '... ./seeds/characters.rb'.light_black
 
 $characters = []
 
+##########
+# Ghouls #
+##########
+c = Character.add({
+  'name' => 'Ghouls',
+
+  # Attributes
+  'armour' => 2,
+  'brawn'  => 3,
+  'health' => 30,
+  'speed'  => 5
+})
+c.add_ability(Ability.find_by_name('Piercing claws'))
+
+###################
+# Goblin poachers #
+###################
+Character.add({
+  'name' => 'Goblin poachers',
+
+  # Attributes
+  'brawn'  => 1,
+  'health' => 20
+})
+
 ########
 # Hero #
 ########
@@ -22,17 +47,6 @@ c = Character.add({
 # .add_ability(Ability.find_by_name('Savagery'))
 # c.add_ability(Ability.find_by_name('Slam'))
 
-###################
-# Goblin poachers #
-###################
-Character.add({
-  'name' => 'Goblin poachers',
-
-  # Attributes
-  'brawn'  => 1,
-  'health' => 20
-})
-
 #############
 # Humbaroth #
 #############
@@ -48,6 +62,19 @@ Character.add({
 })
 .add_ability(Ability.find_by_name('Punishing blows'))
 
+###############
+# Lake spirit #
+###############
+Character.add({
+  'name' => 'Lake spirit',
+
+  # Attributes
+  'armour' => 2,
+  'health' => 50,
+  'magic'  => 5,
+  'speed'  => 4
+})
+
 ###################
 # Malachi of fire #
 ###################
@@ -61,7 +88,6 @@ Character.add({
   'speed'  => 4
 })
 .add_ability(Ability.find_by_name('Fiery aura'))
-
 
 ##########
 # Mauler #
@@ -77,6 +103,45 @@ Character.add({
 })
 .add_ability(Ability.find_by_name('Ferocity'))
 
+################
+# Mist stalker #
+################
+Character.add({
+  'name' => 'Mist stalker',
+
+  # Attributes
+  'brawn'  => 1,
+  'health' => 10
+})
+
+##########
+# Rennie #
+##########
+c = Character.add({
+  'name' => 'Rennie',
+
+  # Attributes
+  'armour' => 2,
+  'brawn'  => 2,
+  'health' => 15,
+  'speed'  => 3
+})
+c.add_ability(Ability.find_by_name('First cut'))
+
+############
+# Ruffians #
+############
+c = Character.add({
+  'name' => 'Ruffians',
+
+  # Attributes
+  'armour' => 1,
+  'brawn'  => 3,
+  'health' => 15,
+  'speed'  => 2
+})
+c.add_ability(Ability.find_by_name('Crone\'s dagger'))
+
 ###########
 # Serpent #
 ###########
@@ -87,6 +152,21 @@ Character.add({
   'health' => 12
 })
 .add_ability(Ability.find_by_name('Venom'))
+
+###########
+# Spindle #
+###########
+c = Character.add({
+  'name' => 'Spindle',
+
+  # Attributes
+  'armour' => 3,
+  'brawn'  => 5,
+  'health' => 30,
+  'speed'  => 5
+})
+c.add_ability(Ability.find_by_name('Venom'))
+c.add_ability(Ability.find_by_name('Webbed'))
 
 ###################
 # Storm elemental #
@@ -101,6 +181,17 @@ Character.add({
   'speed'  => 2
 })
 .add_ability(Ability.find_by_name('Charged'))
+
+###########
+# Turnips #
+###########
+Character.add({
+  'name' => 'Turnips',
+
+  # Attributes
+  'armour' => 1,
+  'health' => 10
+})
 
 #############
 # Zalladell #

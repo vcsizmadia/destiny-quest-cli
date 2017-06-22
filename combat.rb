@@ -211,6 +211,8 @@ class Combat
       # TODO: Name all of these different hooks...
       # Immediately apply certain modifiers.
       [@a, @b].each do |c|
+        other_character = c == @a ? @b : @a
+
         # check_and_apply_is_ferocious(c)
         # Ferocious: Per definition, the value of the 'ferocious' key must be '{'speed' => x}', where x is an integer.
         if c.has_fact?('is ferocious')
@@ -231,6 +233,18 @@ class Combat
           c['current']['speed'] -= 1
           c.remove_fact('is slammed')
           puts "Apply the effects of the 'is slammed' fact to #{c['name']}.".light_black
+        end
+
+        # [VC] TODO: There should be a better way to implement this...
+        # Webbed: The spider's sticky webbing inhibits your movement. At the start of every combat round, roll a die. If you roll [1] or [2], then your _speed_ is reduced by 1 for that combat round. (Note: Ignore this ability if you have used your torch to set fire to the web.)
+        if other_character.has_ability_by_name?('Webbed')
+          c['roll'] = rand(6) + 1
+
+          if [1, 2].include?(c['roll'])
+            c['current']['speed'] -= 1 # if c['current']['speed'] >= 1
+            puts "Applying the effects of the #{'Webbed'.underline} ability to #{c['name'].underline}...".light_black
+            puts "... -1 to #{'speed'.underline} of #{c['name'].underline}.".light_black
+          end
         end
       end
 
@@ -274,9 +288,17 @@ class Combat
 
         numbers      = [roll, @damage_score_modifier, @winner['magic'] > @winner['brawn'] ? @winner['magic'] : @winner['brawn']]
         damage_score = numbers.sum
-        damage       = damage_score - @loser['current']['armour'] > 0 ? damage_score - @loser['current']['armour'] : 0
 
-        puts "... Loser: #{@loser['name'].underline} ... #{@loser['armour']} -> #{@loser['current']['armour']} #{'armour'.underline}".light_black
+        # [VC] TODO: There should be a better way to implement this...
+        # Piercing claws: The ghouls' attacks ignore _armour_.
+        if @winner.has_ability_by_name?('Piercing claws')
+          damage = damage_score
+          puts "The 'Piercing claws' ability ignores #{'armor'.underline}.".light_black
+        else
+          damage = damage_score - @loser['current']['armour'] > 0 ? damage_score - @loser['current']['armour'] : 0    
+          puts "... Loser: #{@loser['name'].underline} ... #{@loser['armour']} -> #{@loser['current']['armour']} #{'armour'.underline}".light_black
+        end
+
         puts "... #{@winner['name']} Damage Score: #{numbers} => #{damage_score} => Damage: #{damage}".light_black
 
         # If the winner manages to do damage to the loser...
@@ -388,6 +410,14 @@ class Combat
           #   puts "... #{c['name']} has been defeated."
           #   break
           # end
+        end
+
+        # [VC] TODO: Get this working against all Characters once such a thing is possible.
+        # Thorns (pa): At the end of every combat round, you automatically inflict 1 damage to all of our opponents. This ability ignores _armour_.
+        a = Ability.find_by_name('Thorns')
+        if c.has_ability?(a)
+          other_character['health'] -= 1
+          puts "#{other_character['name'].underline} takes 1 damage due to #{c['name'].underline}'s #{a['name'].underline} ability!"
         end
 
         # [VC] We should create a hook for health management. We should not have to keep checking Character health each time something happens.
@@ -532,28 +562,34 @@ class Combat
       # puts "... #{@current_character['name'].underline} rolled a [#{@current_character['roll']}] for #{purpose.underline}.".light_black
       puts "... #{@current_character['name'].underline} rolled a [#{@current_character['roll']}].".light_black
 
-      if [1, 2].include?(@current_character['roll'])
-        # [VC] We should have a better, attributes-driven solution for this. How about something like:
-        # - is_only_usable_post_roll = true
-        # - is_passive               = true
-        # We should not need to invoke the Ability selector in this case...
-        # Bewitched
-        a = Ability.find_by_name('Bewitched')
-        if @current_character.has_ability?(a)
+      # [VC] We should have a better, attributes-driven solution for this. How about something like:
+      # - is_automatic             = true # Same as passive?
+      # - is_only_usable_post_roll = true
+      # - is_passive               = true
+
+      # Bewitched: Re-roll any [1] or [2] dice results for Zalladell. The results of the re-rolled dice must be used.
+      a = Ability.find_by_name('Bewitched')
+      if @current_character.has_ability?(a)
+        if [1, 2].include?(@current_character['roll'])
           @current_character['roll'] = rand(6) + 1
           puts "#{@current_character['name']} re-rolled due to the #{a['name'].underline} ability and got a [#{@current_character['roll']}]!".light_black
         end
       end
 
-      # [VC] Let's assume the Ability selector
-      # A roll for damage may be modified with an available 'mo' Ability:
-      # if purpose == 'damage'
-        # We just rolled a die, which is something we need to keep track of for the Ability selector.
-        set_current(@current_character, @current_step, 'post-roll')
+      # We just rolled a die, which is something we need to keep track of for the Ability selector.
+      set_current(@current_character, @current_step, 'post-roll')
 
-        ability_selector(@current_character)
-        ability_selector(@other_character)
-      # end
+      # Crone's dagger: If the ruffians roll a [6] for damage, the crone's dagger automatically inflicts an extra point of _health_ damage.
+      a = Ability.find_by_name('Crone\'s dagger')
+      if @current_step == 'damage score' && @current_character.has_ability?(a)
+        if @current_character['roll'] == 6
+          @damage_score_modifier += 1
+          puts "#{@current_character['name']} rolled a [6] and therefore automatically inflicts an extra point of #{'health'.underline} damage due to the #{a['name'].underline} ability!".light_black
+        end
+      end
+
+      ability_selector(@current_character)
+      ability_selector(@other_character)
     end
 
     # In case an Ability has not already done this...

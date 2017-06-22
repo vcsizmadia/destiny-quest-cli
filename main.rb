@@ -82,8 +82,8 @@ require './seeds/items.rb'
 # Global Variables #
 ####################
 $combat  = nil
-$hero    = $characters[0] # Temporary...
-$serpent = $characters[1] # Temporary...
+$hero    = Character.find_by_name('Hero') # Temporary...
+$serpent = $characters[1]                 # Temporary...
 
 puts 'The primary goal of DestinyQuest is to equip your hero with better weapons, armour and equipment.'
 
@@ -156,7 +156,7 @@ while input != 'x'
     #########
     # Fight #
     #########
-    $combat = Combat.new(Character.find(1), Character.find(8)).fight
+    $combat = Combat.new(Character.find_by_name('Hero'), Character.find_by_name('Lake spirit')).fight
   when 'i'
     #########
     # Items #

@@ -14,6 +14,15 @@ $items = []
 #   'speed'      => 1
 # })
 
+####################
+# Circle of thorns #
+####################
+Item.add({
+  'ability_id' => Ability.find_by_name('Thorns')['id'],
+  'equipment'  => 'ring',
+  'name'       => 'Circle of thorns'
+})
+
 ##################
 # Crone's dagger #
 ##################
@@ -36,6 +45,16 @@ Item.add({
   'speed'      => 1
 })
 
+######################
+# Embroidered gloves #
+######################
+Item.add({
+  'equipment' => 'gloves',
+  'name'      => 'Embroidered gloves',
+  'magic'     => 1,
+  'speed'     => 1
+})
+
 #####################
 # Essence of shadow #
 #####################
@@ -48,6 +67,13 @@ Item.add({
   'speed'      => 1
 })
 
+##############
+# Forest dew #
+##############
+# (2 uses)
+# (backpack)
+# Use any time in combat to restore your _health_ to full.
+
 ##################
 # Gilbert's club #
 ##################
@@ -57,6 +83,24 @@ Item.add({
   'equipment' => 'main hand',
   'name'      => 'Gilbert\'s club'
 })
+
+###############
+# Goblinhewer #
+###############
+Item.add({
+  'armour'    => 1,
+  'category'  => 'sword',
+  'equipment' => 'main hand',
+  'name'      => 'Goblinhewer',
+  'speed'     => 1
+})
+
+#################
+# Healing salve #
+#################
+# (1 use)
+# (backpack)
+# Use any time in combat to restore 6 _health_.
 
 ################
 # Mauler's maw #
@@ -68,6 +112,20 @@ Item.add({
   'name'       => 'Mauler\'s maw',
   'speed'      => 1
 })
+
+###################
+# Mercia's brandy #
+###################
+# (1 use)
+# (backpack)
+# Raises your _speed_ by 3 for one combat round.
+
+################
+# Miracle grow #
+################
+# (1 use)
+# (backpack)
+# Use any time in combat to raise your _brawn_ by 2 for one combat round.
 
 ######################
 # Moth-eaten blanket #
@@ -102,6 +160,36 @@ Item.add({
   'speed'      => 1
 })
 
+###################
+# Patchwork cloak #
+###################
+Item.add({
+  'equipment' => 'cloak',
+  'name'      => 'Patchwork cloak',
+  'speed'     => 1
+})
+
+##################
+# Pot of healing #
+##################
+# (1 use)
+# (backpack)
+# Use any time in combat to restore 4 _health_.
+
+################
+# Pot of magic #
+################
+# (1 use)
+# (backpack)
+# Use any time in combat to raise your _magic_ by 2 for one combat round.
+
+################
+# Pot of speed #
+################
+# (1 use)
+# (backpack)
+# Use any time in combat to raise your _speed_ by 2 for one combat round.
+
 #############
 # Rage claw #
 #############
@@ -135,6 +223,15 @@ Item.add({
   'equipment'  => 'cloak',
   'magic'      => 1,
   'name'       => 'Savage pelt'
+})
+
+#############
+# Silk robe #
+#############
+Item.add({
+  'equipment' => 'chest',
+  'name'      => 'Silk robe',
+  'magic'     => 1
 })
 
 ################

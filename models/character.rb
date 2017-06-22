@@ -33,8 +33,9 @@ class Character
       'left hand' => nil,
       'main hand' => nil,
       'necklace'  => nil,
-      'ring 1'    => nil,
-      'ring 2'    => nil,
+      'ring'      => nil,
+      # 'ring 1'  => nil,
+      # 'ring 2'  => nil,
       'talisman'  => nil,
 
       # Backpack... irrelevant for now...
@@ -108,6 +109,11 @@ class Character
   # @version 20170522
   def self.find(id)
     $characters.detect {|c| c['id'] == id}
+  end
+
+  # @version 20170621
+  def self.find_by_name(name)
+    $characters.detect {|c| c['name'] == name}
   end
 
   ####################

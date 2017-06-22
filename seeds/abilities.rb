@@ -59,6 +59,15 @@ Ability.add({
   'type'                            => 'sp'
 })
 
+##################
+# Crone's dagger #
+##################
+# 'Crone's dagger: If the ruffians roll a [6] for damage, the crone's dagger automatically inflicts an extra point of _health_ damage.'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Crone\'s dagger'
+})
+
 ############
 # Dominate #
 ############
@@ -122,6 +131,15 @@ Ability.add({
   'type'                           => 'mo'
 })
 
+##################
+# Piercing claws #
+##################
+# 'Piercing claws: The ghouls' attacks ignore _armour_.'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Piercing claws'
+})
+
 #########
 # Pound #
 #########
@@ -176,10 +194,21 @@ Ability.add({
 #   'type'        => 'pa'
 # })
 
+##########
+# Thorns #
+##########
+Ability.add({
+  'description' => 'At the end of every combat round, you automatically inflict 1 damage to all of our opponents. This ability ignores _armour_.',
+  'is_passive'  => true,
+  'name'        => 'Thorns',
+  'type'        => 'pa'
+})
+
 #########
 # Venom #
 #########
-# "Venom: Once you have taken damage from the serpent, at the end of every combat round you must automatically lose 2 health."
+# 'Venom: Once you have taken damage from the serpent, at the end of every combat round you must automatically lose 2 health.'
+# 'Venom: Once you have taken health damage from the spider, at the end of every combat round you must automatically lose 2 health.'
 Ability.add({
   'description' => 'If your damage dice / damage score causes health damage to your opponent, they lose a further 2 _health_ at the end of every combat round, for the remainder of the combat. This ability ignores _armour_.',
   'is_passive'  => true,
@@ -187,8 +216,15 @@ Ability.add({
   'type'        => 'pa'
 })
 
+##########
+# Webbed #
+##########
+# 'Webbed: The spider's sticky webbing inhibits your movement. At the start of every combat round, roll a die. If you roll [1] or [2], then your _speed_ is reduced by 1 for that combat round. (Note: Ignore this ability if you have used your torch to set fire to the web.)'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Webbed'
+})
+
 ############
 # Handlers #
 ############
-
-
