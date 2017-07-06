@@ -43,7 +43,8 @@ class Character
       # 'backpack' => [nil, nil, nil, nil, nil],
 
       # Facts
-      'facts' => {},
+      'facts'      => {},
+      'immunities' => [], # Example: [{ability_id: 1, immunity: 'is poisoned'}, ...]
 
       # Paths (mage, rogue, or warrior) and careers... irrelevant for now...
       # 'career' => nil,
@@ -128,18 +129,30 @@ class Character
     @data[key] = value
   end
 
-  # @version 20170601
+  # @version 20170623
   def add_ability(ability)
     CharacterAbility.create(self, ability, nil)
+
+    # Add immunities (if applicable).
+    ability['immunities'].each do |i|
+      self['immunities'] << {
+        'ability_id' => ability['id'],
+        'immunity'   => i
+      }
+
+      puts "... #{self['name'].underline} gained immunity to #{i.underline}.".light_black
+    end
   end
 
   # @param fact [String] the phrase representing the fact
   # @param details [Hash] attributes or other details we need to keep track of for the fact
-  # @version 20170602
+  # @version 20170623
   def add_fact(fact, details = {})
-    unless self['facts'].has_key?(fact)
+    if self.has_immunity?(fact)
+      puts "...... #{self['name'].underline} is immune to #{fact.underline}..."
+    elsif !self['facts'].has_key?(fact)
       self['facts'][fact] = details
-      puts "#{self['name']} #{fact.underline}!"
+      puts "...... #{self['name'].underline} #{fact.underline}!"
     end
   end
 
@@ -212,6 +225,11 @@ class Character
   # @version 20170602
   def has_fact?(fact)
     self['facts'].has_key?(fact)
+  end
+
+  # @version 20170623
+  def has_immunity?(immunity)
+    !!self['immunities'].detect {|i| i['immunity'] == immunity}
   end
 
   # @version 20170521

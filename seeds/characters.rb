@@ -27,6 +27,20 @@ Character.add({
   'health' => 20
 })
 
+############
+# Grey hag #
+############
+c = Character.add({
+  'name' => 'Grey hag',
+
+  # Attributes
+  'armour' => 3,
+  'brawn'  => 6,
+  'health' => 40,
+  'speed'  => 6
+})
+c.add_ability(Ability.find_by_name('Warts and all'))
+
 ########
 # Hero #
 ########
@@ -45,7 +59,7 @@ c = Character.add({
 # .add_ability(Ability.find_by_name('Dominate'))
 # .add_ability(Ability.find_by_name('Fearless'))
 # .add_ability(Ability.find_by_name('Savagery'))
-# c.add_ability(Ability.find_by_name('Slam'))
+c.add_ability(Ability.find_by_name('Venom'))
 
 #############
 # Humbaroth #
@@ -153,6 +167,20 @@ Character.add({
 })
 .add_ability(Ability.find_by_name('Venom'))
 
+###################
+# Skeleton guards #
+###################
+Character.add({
+  'name' => 'Skeleton guards',
+
+  # Attributes
+  'armour' => 3,
+  'brawn'  => 4,
+  'health' => 25,
+  'speed'  => 4
+})
+.add_ability(Ability.find_by_name('Body of bone'))
+
 ###########
 # Spindle #
 ###########
@@ -181,6 +209,19 @@ Character.add({
   'speed'  => 2
 })
 .add_ability(Ability.find_by_name('Charged'))
+
+##############
+# Tree roots #
+##############
+Character.add({
+  'name' => 'Tree roots',
+
+  # Attributes
+  'armour' => 2,
+  'brawn'  => 4,
+  'health' => 30,
+  'speed'  => 5
+})
 
 ###########
 # Turnips #

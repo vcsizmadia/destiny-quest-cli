@@ -246,12 +246,34 @@ Item.add({
   'speed'      => 1
 })
 
+#################
+# Spindle's eye #
+#################
+Item.add({
+  'ability_id' => Ability.find_by_name('Charm')['id'],
+  'equipment'  => 'talisman',
+  'name'       => 'Spindle\'s eye',
+  'speed'      => 1
+})
+
 ###############
 # Spindlesilk #
 ###############
 # (2 uses)
 # (backpack)
 # Perhaps a master clothier could do something with this fine silk.
+
+######################
+# Spindlesilk mantle #
+######################
+# [VC] TODO: Implement other 'Spindlesilk set' Ability and Items first...
+# Item.add({
+#   'ability_id' => Ability.find_by_name('Spindlesilk set')['id'],
+#   'armour'     => 1,
+#   'equipment'  => 'chest',
+#   'magic'      => 1,
+#   'name'       => 'Spindlesilk mantle'
+# })
 
 ################
 # Stone collar #
@@ -304,4 +326,16 @@ Item.add({
   'equipment'  => 'necklace',
   'magic'      => 1,
   'name'       => 'Trophy of bones'
+})
+
+#################
+# Venomous fang #
+#################
+Item.add({
+  'ability_id' => Ability.find_by_name('Venom')['id'],
+  'brawn'      => 1,
+  'category'   => 'dagger',
+  'equipment'  => 'main hand',
+  'name'       => 'Venomous fang',
+  'speed'      => 1
 })

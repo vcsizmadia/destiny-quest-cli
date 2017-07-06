@@ -156,7 +156,7 @@ while input != 'x'
     #########
     # Fight #
     #########
-    $combat = Combat.new(Character.find_by_name('Hero'), Character.find_by_name('Lake spirit')).fight
+    $combat = Combat.new(Character.find_by_name('Hero'), Character.find_by_name('Skeleton guards')).fight
   when 'i'
     #########
     # Items #

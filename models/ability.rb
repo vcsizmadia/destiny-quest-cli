@@ -1,12 +1,11 @@
 puts '... ./models/ability.rb'.light_black
 
-
-
 class Ability
-  # @version 20170526
+  # @version 20170622
   def initialize(hash = {})
     @data = {
       'id'                              => nil,
+      'immunities'                      => [],
       'is_only_usable_against_winner'   => false, # Only usable by the loser against the winner (if winner exists)...
       'is_only_usable_before_combat'    => false,
       'is_only_usable_for_attack_speed' => false, # Only usable during one of the 'attack speed' steps...

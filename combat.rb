@@ -190,6 +190,7 @@ class Combat
       @loser                 = nil
       @winner                = nil
 
+      # hp "Round #{@round}"
       puts "\nRound #{@round}"
 
       ###########################
@@ -418,6 +419,14 @@ class Combat
         if c.has_ability?(a)
           other_character['health'] -= 1
           puts "#{other_character['name'].underline} takes 1 damage due to #{c['name'].underline}'s #{a['name'].underline} ability!"
+        end
+
+        # FINISH THIS!!!
+        # Warts and all
+        a = Ability.find_by_name('Warts and all')
+        if c.has_ability?(a)
+          # other_character['health'] -= 1
+          # puts "#{other_character['name'].underline} takes 1 damage due to #{c['name'].underline}'s #{a['name'].underline} ability!"
         end
 
         # [VC] We should create a hook for health management. We should not have to keep checking Character health each time something happens.

@@ -28,6 +28,20 @@ Ability.add({
   'name'       => 'Black sigils'
 })
 
+################
+# Body of bone #
+################
+# 'Body of bone: The skeletons are immune to _bleed_ and _venom_.'
+# [VC] Translation: They are immune to 'is bleeding' and 'is poisoned'.
+Ability.add({
+  'immunities' => [
+    'is bleeding',
+    'is poisoned'
+  ],
+  'is_passive' => true,
+  'name'       => 'Body of bone'
+})
+
 ###########
 # Charged #
 ###########
@@ -214,6 +228,15 @@ Ability.add({
   'is_passive'  => true,
   'name'        => 'Venom',
   'type'        => 'pa'
+})
+
+#################
+# Warts and all #
+#################
+# 'Warts and all: At the end of each combat round, roll a die. If the result is a [1], then the witch has temporarily transformed you into a warty toad! As a toad, you can only roll 1 die to determine your attack speed at the end of the next combat round.'
+Ability.add({
+  'is_passive' => true,
+  'name'       => 'Warts and all'
 })
 
 ##########
